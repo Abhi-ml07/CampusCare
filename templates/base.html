@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+    <html lang="en">
+     <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}CampusCare{% endblock %}</title>
+        <link rel="stylesheet" href="static/style.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    </head>
+    <body>
+        <nav class="navbar">
+            <div class="logo">Campus<span><a href="{{ url_for('home') }}" style="color: #3498db; text-decoration: none;">Care</a></span></div>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('about') }}">About</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact</a></li>
+                {% if session.get('user') %}
+                    <li class="user-name">
+                        <a href="{{ url_for('profile') }}">Hello, {{ session['user']|e }}</a>
+                    </li>
+                    <li>
+                        <form method="post" action="{{ url_for('logout') }}" style="display:inline">
+                            <button type="submit" class="logout-btn">Logout</button>
+                        </form>
+                    </li>
+                {% else %}
+                    <li>
+                        <a href="{{ url_for('login') }}" class="login-btn">Login</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>  
+
+        {% block body %}{% endblock body %}
+    
+        <footer id="contact" class="footer">
+        <div class="footer-content">
+            <div class="footer-section about">
+                <h3>About Project</h3>
+                <p>
+                    CampusCare is a web application designed to help users browse, purchase, and review campus services online. 
+                    It aims to provide a seamless experience with a user-friendly interface.
+                </p>
+            </div>
+
+            <div class="footer-section contact">
+                <h3>Contact Us</h3>
+                <p><i class="fas fa-envelope"></i> <a href="mailto:mandal.abhishek2045@gmail.com" style="color: #fff;">mandal.abhishek2045@gmail.com</a></p>
+                <p><i class="fas fa-phone"></i> +91 9531768416</p>
+                
+                <br>
+                <h3>Follow Us</h3>
+                <div class="socials">
+                    <a href="https://www.facebook.com/share/15vh5hGLA9/" target="_blank" aria-label="Facebook">
+                    <i class="fab fa-facebook-f"></i>
+                     </a>
+                    <a href="https://www.instagram.com/torned._page_/" target="_blank" aria-label="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/abhishek-mandal-2045abhi/"
+                    target="_blank" aria-label="LinkedIn">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="https://twitter.com" target="_blank" aria-label="Twitter">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            &copy; 2026 CampusCare 
+        </div>
+    </footer>
+    </body>
+    </html>

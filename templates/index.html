@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Home - CampusCare{% endblock title %}
+
+{% block body %}
+<div class="container">
+    <section class="home">
+        <div class="home-content">
+            <h1>Welcome to CampusCare</h1>
+            <p>Your one-stop solution for campus services and support.</p>
+            {% if 'user' in session %}
+                <a href="{{ url_for('profile') }}" class="btn">Go to Profile</a>
+            {% else %}
+                <a href="{{ url_for('login') }}" class="btn">Login to Get Started</a>
+            {% endif %}
+        </div>
+    </section>
+</div>
+{% endblock body %}
