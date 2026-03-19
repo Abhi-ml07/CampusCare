@@ -85,6 +85,9 @@ label{display:block;color:var(--muted);font-size:0.9rem;margin-bottom:6px}
 .forgot-link:hover{color:#fff}
 .btn-sign{width:56px;height:48px;border-radius:14px;padding:0 14px;background:linear-gradient(135deg,var(--accent),var(--accent-2));box-shadow:0 10px 30px rgba(124,58,237,0.18);color:#fff;border:none;display:inline-flex;align-items:center;justify-content:center;font-weight:700}
 
+/*register*/
+.create-form{max-width:520px;margin:36px auto}
+
 
 /* Tables */
 table{width:100%;border-collapse:collapse;background:transparent}
