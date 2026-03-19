@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - CampusCare{% endblock title %}
+
+{% block body %}
+<div class="container">
+    <header class="site-header">
+        <h1>Student Dashboard</h1>
+    </header>
+
+    <section class="hero" style="grid-template-columns:280px 1fr;">
+        <aside class="sidebar card">
+            <h3>Filters</h3>
+            <div style="margin-top:12px;display:grid;gap:10px">
+                <label>Category</label>
+                <select class="input">
+                    <option>All</option>
+                    <option>Academic</option>
+                    <option>Technical</option>
+                    <option>Administrative</option>
+                    <option>Canteen</option>
+                </select>
+
+                <label>Status</label>
+                <select class="input">
+                    <option>All</option>
+                    <option>Open</option>
+                    <option>In Progress</option>
+                    <option>Resolved</option>
+                </select>
+
+                <label>Sort</label>
+                <select class="input">
+                    <option>Recent</option>
+                    <option>Most Liked</option>
+                    <option>Most Viewed</option>
+                </select>
+            </div>
+        </aside>
+
+        <div>
+            <section style="margin-bottom:16px">
+                <h2>List of Issues</h2>
+            </section>
+
+            <section class="grid">
+                <div class="card">
+                    <h3>WiFi not working in hostel</h3>
+                    <p class="muted">Category: Technical • Status: Open</p>
+                    <p class="help">👍 120 Likes</p>
+                </div>
+
+                <div class="card">
+                    <h3>Library timing extension</h3>
+                    <p class="muted">Category: Administrative • Status: In Progress</p>
+                    <p class="help">👍 95 Likes</p>
+                </div>
+
+                <div class="card">
+                    <h3>Assignment deadline issue</h3>
+                    <p class="muted">Category: Academic • Status: Resolved</p>
+                    <p class="help">👍 150 Likes</p>
+                </div>
+            </section>
+        </div>
+    </section>
+</div>
+{% endblock body %}

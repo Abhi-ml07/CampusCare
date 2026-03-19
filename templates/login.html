@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Login - CampusCare{% endblock title %}
+
+{% block body %}
+<div class="container">
+  <div class="card login-card">
+    <h2 class="center">Sign in to CampusCare</h2>
+    <form method="post" action="{{ url_for('login') }}" style="display:grid;gap:12px;margin-top:14px" data-validate>
+      <div>
+        <label for="username">Username or Email</label>
+        <input id="username" name="username" class="input" required>
+      </div>
+      <div>
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" class="input" required>
+      </div>
+      <div class="login-meta">
+        <div class="inline-links">New to CampusCare? <a href="{{ url_for('register') }}">Create Account</a></div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <a class="forgot-link" href="/forgot">Forgot Password?</a>
+          <button class="btn-sign" type="submit">Sign in</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  
+</div>
+{% endblock body %}

@@ -4,15 +4,37 @@
 
 {% block body %}
 <div class="container">
-    <section class="home">
-        <div class="home-content">
-            <h1>Welcome to CampusCare</h1>
-            <p>Your one-stop solution for campus services and support.</p>
-            {% if 'user' in session %}
-                <a href="{{ url_for('profile') }}" class="btn">Go to Profile</a>
-            {% else %}
-                <a href="{{ url_for('login') }}" class="btn">Login to Get Started</a>
-            {% endif %}
+    <section class="hero">
+        <div class="lead">
+            <h2>Raise Your Voice, Solve Your Problems</h2>
+            <p>Report issues easily and track their progress in real-time.</p>
+            <div style="margin-top:16px">
+                <a href="{{ url_for('login') }}" class="btn btn-primary">Report Issue</a>
+            </div>
+        </div>
+
+        <aside class="sidebar card">
+            <h3>Quick Stats</h3>
+            <div style="margin-top:12px;display:grid;gap:8px">
+                <div class="pill">Issues Solved: <strong class="accent">1200+</strong></div>
+                <div class="pill">Pending: <strong class="accent">350</strong></div>
+                <div class="pill">Active Users: <strong class="accent">50+</strong></div>
+            </div>
+        </aside>
+    </section>
+
+    <section class="grid" style="margin-top:20px">
+        <div class="card">
+            <h3>Hostel Water Shortage</h3>
+            <p class="muted">Status: Urgent</p>
+        </div>
+        <div class="card">
+            <h3>Campus Electricity Problem</h3>
+            <p class="muted">Status: Urgent</p>
+        </div>
+        <div class="card">
+            <h3>Broken Classroom Projector</h3>
+            <p class="muted">Status: High Priority</p>
         </div>
     </section>
 </div>
