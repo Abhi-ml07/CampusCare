@@ -9,7 +9,11 @@
             <h2>Raise Your Voice, Solve Your Problems</h2>
             <p>Report issues easily and track their progress in real-time.</p>
             <div style="margin-top:16px">
-                <a href="{{ url_for('login') }}" class="btn btn-primary">Report Issue</a>
+                {% if session.get('user_id') %}
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-primary">Report Issue</a>
+                {% else %}
+                     <a href="{{ url_for('login') }}" class="btn btn-primary">Report Issue</a>
+                {% endif %}
             </div>
         </div>
 
