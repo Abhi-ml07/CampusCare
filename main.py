@@ -25,6 +25,8 @@ def home():
 
 @app.route("/dashboard")
 def dashboard():
+    if 'user' not in session:
+        return redirect(url_for('login'))
     return render_template("dash.html")
 
 
@@ -54,42 +56,57 @@ def contact():
 def register():
     if request.method == "POST":
         name = request.form.get("name")
+        student_code = request.form.get("student_code")
+        phone = request.form.get("phone")
         email = request.form.get("email")
         password = request.form.get("password")
 
-        existing_user = mongo.db.users.find_one({"email": email})
+        # Check existing user
+        existing_user = mongo.db.users.find_one({
+            "$or": [
+                {"email": email},
+                {"student_code": student_code}
+            ]
+        })
+
         if existing_user:
-            return "Email already registered!"
+            return render_template("register.html", error="User already exists!")
 
         hashed_password = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
+
         mongo.db.users.insert_one({
             "name": name,
+            "student_code": student_code,
+            "phone": phone,
             "email": email,
             "password": hashed_password
         })
 
-        return render_template("login.html", success="Account created successfully!")
+        return redirect(url_for('login'))
+
     return render_template("register.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        email = request.form.get("email")
+        identifier = request.form.get("student_code")  # ✅ FIXED
         password = request.form.get("password")
 
-        user = mongo.db.users.find_one({"email": email})
+        user = mongo.db.users.find_one({
+            "$or": [
+                {"email": identifier},
+                {"student_code": identifier}
+            ]
+        })
 
         if user and bcrypt.checkpw(password.encode("utf-8"), user["password"]):
             session['user'] = user.get('name') or user.get('email')
-            session['just_logged_in'] = True
-            return redirect(url_for('login'))
+            return redirect(url_for('dashboard'))
         else:
-            return render_template("login.html", error="Invalid email or password.")
-    success = None
-    if session.pop('just_logged_in', None):
-        success = "Login successful!"
-    return render_template("login.html", success=success)
+            return render_template("login.html", error="Invalid Student Code/Email or Password")
+
+    return render_template("login.html")
 
 @app.route('/logout', methods=['POST'])
 def logout():
