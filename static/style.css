@@ -44,13 +44,69 @@ body{
 .nav-links{display:flex;align-items:center;gap:10px;list-style:none;margin:0;padding:0}
 .nav-links li{margin:0}
 .nav-links a{color:var(--muted);text-decoration:none;padding:8px 12px;border-radius:8px;transition:background var(--transition),color var(--transition)}
-.nav-links a:hover{color:#fff;background:linear-gradient(90deg,rgba(255,255,255,0.03),transparent)}
+.nav-links a:hover{color:#fff;background:linear-gradient(90deg,rgba(255, 255, 255, 0.03),transparent)}
 .nav-links .welcome{color:var(--muted);padding:8px 12px}
 .btn.login{padding:8px 12px;border-radius:8px;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;border:none}
 .btn.logout{padding:8px 12px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
 
 /* add subtle background on scroll (optional JS can toggle `.scrolled`) */
 .navbar.scrolled{box-shadow:0 8px 30px rgba(2,6,23,0.5);background:linear-gradient(180deg,rgba(2,6,23,0.35),rgba(2,6,23,0.12))}
+
+
+/*searb bar */
+/* Search Form Container */
+.d-flex[role="search"] {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Input Styling */
+.form-control {
+    border-radius: 30px;
+    padding: 10px 16px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    outline: none;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(6px);
+}
+
+/* Placeholder */
+.form-control::placeholder {
+    color: rgba(255,255,255,0.6);
+}
+
+/* Focus Effect */
+.form-control:focus {
+    border-color: #4da6ff;
+    box-shadow: 0 0 8px rgba(77,166,255,0.6);
+    background: rgba(255,255,255,0.12);
+}
+
+/* Button Styling */
+.btn-outline-success {
+    border-radius: 30px;
+    padding: 10px 18px;
+    border: none;
+    background: linear-gradient(135deg, #4da6ff, #007bff);
+    color: #fff;
+    transition: all 0.3s ease;
+}
+
+/* Hover Effect */
+.btn-outline-success:hover {
+    background: linear-gradient(135deg, #3399ff, #0066cc);
+    transform: translateY(-1px);
+}
+
+/* Click Effect */
+.btn-outline-success:active {
+    transform: scale(0.95);
+}
+
+
 
 /* Hero */
 .hero{display:grid;grid-template-columns:1fr 360px;gap:28px;align-items:start;padding:38px 0}
@@ -85,8 +141,7 @@ label{display:block;color:var(--muted);font-size:0.9rem;margin-bottom:6px}
 .forgot-link:hover{color:#fff}
 .btn-sign{width:56px;height:48px;border-radius:14px;padding:0 14px;background:linear-gradient(135deg,var(--accent),var(--accent-2));box-shadow:0 10px 30px rgba(124,58,237,0.18);color:#fff;border:none;display:inline-flex;align-items:center;justify-content:center;font-weight:700}
 
-/*register*/
-.create-form{max-width:520px;margin:36px auto}
+/*register-specific tweaks*/
 
 
 /* Tables */
