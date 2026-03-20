@@ -3,26 +3,56 @@
 {% block title %}Register - CampusCare{% endblock title %}
 
 {% block body %}
-<div class="create-form">
-  <h2>Create Account</h2>
-  {% if created %}
-    <div class="success-message">Account created successfully. You can now log in.</div>
-  {% endif %}
-  {% if error %}
-    <div class="error-message">{{ error }}</div>
-  {% endif %}
-  <form method="POST" action="/register">
-      <label for="name">Name:</label>
-      <input type="text" id="name" name="name" placeholder="Full Name" required>
-      <label for="username">Username:</label>
-      <input type="text" id="username" name="username" placeholder="Choose a username" required>
-      <label for="phone">Phone Number:</label>
-      <input type="text" id="phone" name="phone" placeholder="Phone Number" required>
-      <label for="email">Email:</label>
-      <input type="email" id="email" name="email" placeholder="Email" required>
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="password" placeholder="Password" required>
-      <button type="submit">Create Account</button>
+<div class="container">
+  <div class="card login-card">
+    <h2 class="center">Create Account</h2>
+
+    {% if created %}
+      <div class="success-message">Account created successfully. You can now log in.</div>
+    {% endif %}
+
+    {% if error %}
+      <div class="error-message">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST" action="/register" style="display:grid;gap:12px;margin-top:14px" data-validate>
+
+      <div>
+        <label for="name">Name</label>
+        <input id="name" name="name" class="input" placeholder="Full Name" required>
+      </div>
+
+      <div>
+        <label for="student_code">Student Code</label>
+         <input type="text" id="student_code" name="student_code" class="input" placeholder="Enter your student code" required>
+      </div>
+      
+      <div>
+        <label for="phone">Phone Number</label>
+        <input id="phone" name="phone" class="input" placeholder="Phone Number" required>
+      </div>
+
+      <div>
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" class="input" placeholder="Email" required>
+      </div>
+
+      <div>
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" class="input" placeholder="Password" required>
+      </div>
+
+      <div class="login-meta">
+        <div class="inline-links">
+          Already have an account? <a href="{{ url_for('login') }}">Sign in</a>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:12px">
+          <button class="btn-sign" type="submit">Create Account</button>
+        </div>
+      </div>
+
     </form>
+  </div>
 </div>
 {% endblock body %}
