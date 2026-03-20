@@ -27,13 +27,16 @@
 
             {% if session.get('user') %}
                 <li class="welcome">
-                    👋 {{ session['user']|e }}
+                    <a href="{{ url_for('dashboard') }}" class="user-link">
+                        ⚆_⚆ {{ session['user']|e }}
+                    </a>
                 </li>
                 <li>
                     <form method="post" action="{{ url_for('logout') }}">
                         <button type="submit" class="btn logout">Logout</button>
                     </form>
                 </li>
+
             {% else %}
                 <li>
                     <a href="{{ url_for('login') }}" class="btn login">Login</a>
@@ -78,7 +81,7 @@
         <!-- Contact -->
         <div class="footer-box">
             <h3>Contact</h3>
-            <p><i class="fas fa-envelope"></i> mandal.abhishek2045@gmail.com</p>
+            <p><i class="fas fa-envelope"></i> mondal.abhishek2024@gmail.com</p>
             <p><i class="fas fa-phone"></i> +91 9531768416</p>
 
             <div class="socials">
