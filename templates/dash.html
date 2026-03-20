@@ -4,8 +4,12 @@
 
 {% block body %}
 <div class="container">
-    <header class="site-header">
+   <header class="site-header">
         <h1>Student Dashboard</h1>
+        <form class="d-flex" role="search">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
     </header>
 
     <section class="hero" style="grid-template-columns:280px 1fr;">
@@ -62,6 +66,9 @@
                     <p class="help">👍 150 Likes</p>
                 </div>
             </section>
+            <div style="text-align:center;margin-top:20px">
+                <button class="submit"><a href="https://forms.gle/Q17XWProaQiLHcyD8" target="_blank">Report Issue</a></button>
+            </div>
         </div>
     </section>
 </div>
