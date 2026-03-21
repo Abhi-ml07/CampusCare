@@ -11,7 +11,6 @@
             <button class="btn btn-outline-success" type="submit">Search</button>
         </form>
     </header>
-
     <section class="hero" style="grid-template-columns:280px 1fr;">
         <aside class="sidebar card">
             <h3>Filters</h3>
@@ -67,7 +66,7 @@
                 </div>
             </section>
             <div class="report-container">
-                <a href="https://forms.gle/oy3H5bLuAoPsXk7q9" target="_blank" class="report-btn">Report Issue</a>
+                <a href="{{ url_for('response') }}" target="_blank" class="report-btn">Report Issue</a>
             </div>
         </div>
     </section>
