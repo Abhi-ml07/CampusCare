@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}Report Issue - CampusCare{% endblock title %}
+{% block body %}
+<div class="container">
+  <div class="card" style="max-width:720px;margin:0 auto">
+    
+    <h2>Issue Report Form</h2>
+    <p class="muted">Report any issue in your campus. Your feedback helps improve the environment.</p>
+
+    <form method="POST" action="{{ url_for('response') }}" enctype="multipart/form-data" style="margin-top:12px;display:grid;gap:12px">
+
+      <!-- Primary Category -->
+      <div>
+        <label>Primary Category</label>
+        <select class="input" name="category" required>
+          <option value="">Select Category</option>
+          <option>Academic</option>
+          <option>Technical</option>
+          <option>Administrative</option>
+          <option>Canteen</option>
+        </select>
+      </div>
+
+      <!-- Subcategory -->
+      <div>
+        <label>Subcategory</label>
+        <select class="input" name="subcategory" required>
+          <option value="">Select Subcategory</option>
+          <option>Infrastructure / Maintenance</option>
+          <option>Sanitation / Hygiene</option>
+          <option>IT / Connectivity</option>
+          <option>Safety / Security</option>
+          <option>Academic / Administrative</option>
+          <option>Hostel / Residential Issues</option>
+          <option>Cafeteria / Food Services</option>
+          <option>Environment / Grounds</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <!-- Status -->
+      <div>
+        <label>Issue Status</label>
+        <select class="input" name="status" required>
+          <option value="">Select Status</option>
+          <option>New</option>
+          <option>Already Reported</option>
+          <option>Not Sure</option>
+        </select>
+      </div>
+
+      <!-- Students Affected -->
+      <div>
+        <label>How many students affected?</label>
+        <select class="input" name="affected" required>
+          <option value="">Select Range</option>
+          <option>1 - 10</option>
+          <option>20 - 50</option>
+          <option>Whole Department (>60)</option>
+          <option>Entire Campus</option>
+        </select>
+      </div>
+
+      <!-- Severity -->
+      <div>
+        <label>How critical is the issue?</label>
+        <div class="checkbox-group">
+          <label><input type="radio" name="severity" value="1" required>1</label>
+          <label><input type="radio" name="severity" value="2">2</label>
+          <label><input type="radio" name="severity" value="3">3</label>
+          <label><input type="radio" name="severity" value="4">4</label>
+          <label><input type="radio" name="severity" value="5">5 (Urgent)</label>
+        </div>
+      </div>
+
+      <!-- Duration -->
+      <div>
+        <label>How long have you faced this problem?</label>
+        <input type="text" name="duration" class="input" placeholder="e.g. 2 days / 1 week" required>
+      </div>
+
+      <!-- Location -->
+      <div>
+        <label>Location of the Problem</label>
+        <input type="text" name="location" class="input" placeholder="Enter location" required>
+      </div>
+
+      <!-- Image -->
+      <div>
+        <label>Upload Image (Optional)</label>
+        <input type="file" name="image" class="input">
+      </div>
+
+      <!-- Description -->
+      <div>
+        <label>Description</label>
+        <textarea name="description" rows="4" class="input" placeholder="Describe the issue..." required></textarea>
+      </div>
+
+      <!-- Submit -->
+      <div>
+        <button class="btn btn-primary" type="submit">Submit Report</button>
+      </div>
+
+    </form>
+  </div>
+</div>
+{% endblock body %}
