@@ -4,43 +4,12 @@ from flask import session
 from flask_pymongo import PyMongo
 from dotenv import load_dotenv
 import os,bcrypt
-import pandas as pd
-import requests
-from pymongo import MongoClient
-
 load_dotenv()
 
 app = Flask(__name__)
 app.config["MONGO_URI"] = os.getenv("MONGO_URI")
 app.secret_key = os.getenv("SECRET_KEY", "dev-secret")
 mongo = PyMongo(app)
-
-CSV_URL = os.getenv("CSV_URL")
-def sync_sheet_to_mongo():
-    response = requests.get(CSV_URL)
-    df = pd.read_csv(pd.io.common.BytesIO(response.content))
-
-    df.columns = df.columns.str.strip()
-
-    collection = mongo.db.responses
-
-    for _, row in df.iterrows():
-        data = row.to_dict()
-
-        unique_id = str(hash(frozenset(data.items())))
-
-        if not collection.find_one({"_id": unique_id}):
-            data["_id"] = unique_id
-            collection.insert_one(data)
-            print("Inserted:", data)
-            
-            
-@app.route("/sync")
-def sync():
-    count = sync_sheet_to_mongo()
-    return f"{count} new records inserted!"
-
-
 
 # -------------
 
