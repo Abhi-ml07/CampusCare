@@ -35,6 +35,41 @@ def about():
     return render_template("about.html")
 
 
+@app.route("/response", methods=["GET", "POST"])
+def response():
+    if request.method == "POST":
+        category = request.form.get("category")
+        subcategory = request.form.get("subcategory")
+        status = request.form.get("status")
+        affected = request.form.get("affected")
+        critical_value = request.form.get("critical")
+        duration = request.form.get("duration")
+        location = request.form.get("location")
+        description = request.form.get("description")
+
+        # Handle severity safely
+        if critical_value:
+            severity = int(critical_value)
+        else:
+            severity = 1
+
+        # Insert into MongoDB
+        mongo.db.issues.insert_one({
+            "category": category,
+            "subcategory": subcategory,
+            "status": "Pending",   # override default system status
+            "user_status": status, # what user selected
+            "students_affected": affected,
+            "severity": severity,
+            "duration": duration,
+            "location": location,
+            "description": description,
+            "likes": 0,
+            "created_at": datetime.utcnow()
+        })
+        return render_template("response.html", success="Your issue has been reported!")
+    return render_template("response.html")
+
 @app.route("/contact/submit", methods=["GET", "POST"])
 def contact():
     if request.method == "POST":
