@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusCare — Empowering Students, Transforming Campuses</title>
+  <meta name="description" content="CampusCare helps students report and resolve campus issues efficiently, connecting them with the right authorities for a better campus experience." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="index.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="#" class="logo" id="logo-home">
+        <div class="logo-icon">
+          <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="18" cy="18" r="18" fill="url(#logoGrad)"/>
+            <path d="M10 24L18 10L26 24H10Z" fill="white" opacity="0.9"/>
+            <circle cx="18" cy="20" r="4" fill="white" opacity="0.6"/>
+            <defs>
+              <linearGradient id="logoGrad" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#7C3AED"/>
+                <stop offset="1" stop-color="#2563EB"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <span class="logo-text">Campus<span class="logo-accent">Care</span></span>
+      </a>
+      <div class="nav-links" id="nav-links">
+        <a href="#" class="nav-link active" data-page="home">Home</a>
+        <a href="#" class="nav-link" data-page="feed">Browse Issues</a>
+        <a href="#" class="nav-link" data-page="report">Report Issue</a>
+        <a href="#" class="nav-link" data-page="dashboard" id="nav-dashboard" style="display:none">Dashboard</a>
+      </div>
+      <div class="nav-actions">
+        <button class="btn btn-ghost" id="btn-login">Sign In</button>
+        <button class="btn btn-primary" id="btn-signup">Get Started</button>
+        <div class="user-avatar" id="user-avatar" style="display:none">
+          <img src="" alt="User" id="avatar-img" />
+          <span id="avatar-name"></span>
+          <div class="avatar-dropdown">
+            <a href="#" data-page="dashboard">Dashboard</a>
+            <a href="#" id="btn-logout">Sign Out</a>
+          </div>
+        </div>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- PAGES -->
+  <main id="app">
+
+    <!-- HOME PAGE -->
+    <div id="page-home" class="page active">
+      <!-- Hero -->
+      <section class="hero">
+        <div class="hero-bg">
+          <div class="hero-orb orb-1"></div>
+          <div class="hero-orb orb-2"></div>
+          <div class="hero-orb orb-3"></div>
+          <div class="hero-grid"></div>
+        </div>
+        <div class="hero-content">
+          <div class="hero-badge">
+            <span class="badge-dot"></span>
+            <span>Trusted by 12,000+ students across 50 campuses</span>
+          </div>
+          <h1 class="hero-title">
+            Your Voice.<br/>
+            <span class="gradient-text">Your Campus.</span><br/>
+            Your Power.
+          </h1>
+          <p class="hero-subtitle">
+            Report campus issues in seconds. Track progress in real-time. Create a campus you're proud of — together.
+          </p>
+          <div class="hero-cta">
+            <button class="btn btn-primary btn-xl" id="hero-report-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7-7 7 7"/></svg>
+              Report an Issue
+            </button>
+            <button class="btn btn-ghost btn-xl" id="hero-browse-btn">
+              Browse Issues
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+          <div class="hero-stats">
+            <div class="stat"><span class="stat-num" data-target="3842">0</span><span class="stat-label">Issues Resolved</span></div>
+            <div class="stat-divider"></div>
+            <div class="stat"><span class="stat-num" data-target="94">0</span><span class="stat-label">% Resolution Rate</span></div>
+            <div class="stat-divider"></div>
+            <div class="stat"><span class="stat-num" data-target="48">0</span><span class="stat-label">Avg Hours to Fix</span></div>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="hero-card-stack">
+            <div class="floating-card card-a">
+              <div class="fc-icon fc-icon-green">✓</div>
+              <div class="fc-body"><strong>WiFi Fixed</strong><small>Library Block B · 2h ago</small></div>
+            </div>
+            <div class="floating-card card-b">
+              <div class="fc-icon fc-icon-yellow">⚡</div>
+              <div class="fc-body"><strong>Broken Light</strong><small>Hostel C · In Progress</small></div>
+            </div>
+            <div class="floating-card card-c">
+              <div class="fc-icon fc-icon-blue">🔔</div>
+              <div class="fc-body"><strong>New Update</strong><small>Your report was reviewed</small></div>
+            </div>
+            <div class="phone-mockup">
+              <div class="phone-screen">
+                <div class="phone-header">
+                  <span>CampusCare</span>
+                  <div class="ph-dot ph-dot-r"></div>
+                </div>
+                <div class="phone-item">
+                  <div class="pi-cat" style="background:#7C3AED22;color:#7C3AED">WiFi</div>
+                  <div class="pi-body">
+                    <span>Library Connectivity</span>
+                    <div class="pi-bar"><div class="pi-fill" style="width:80%"></div></div>
+                  </div>
+                  <span class="pi-status resolved">Done</span>
+                </div>
+                <div class="phone-item">
+                  <div class="pi-cat" style="background:#F59E0B22;color:#F59E0B">Infra</div>
+                  <div class="pi-body">
+                    <span>AC Malfunction Rm 204</span>
+                    <div class="pi-bar"><div class="pi-fill" style="width:45%;background:#F59E0B"></div></div>
+                  </div>
+                  <span class="pi-status progress">Active</span>
+                </div>
+                <div class="phone-item">
+                  <div class="pi-cat" style="background:#EF444422;color:#EF4444">Safety</div>
+                  <div class="pi-body">
+                    <span>Broken Railing Gate 3</span>
+                    <div class="pi-bar"><div class="pi-fill" style="width:10%;background:#EF4444"></div></div>
+                  </div>
+                  <span class="pi-status new">New</span>
+                </div>
+                <div class="phone-fab">+ Report Issue</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Features -->
+      <section class="features-section">
+        <div class="section-header">
+          <div class="section-tag">Why CampusCare?</div>
+          <h2>Everything you need to fix<br/><span class="gradient-text">your campus</span></h2>
+        </div>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon" style="background:linear-gradient(135deg,#7C3AED,#A855F7)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h3>Instant Reporting</h3>
+            <p>Submit any campus issue in under 60 seconds — attach photos, tag location, and pick the right authority automatically.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon" style="background:linear-gradient(135deg,#2563EB,#60A5FA)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            </div>
+            <h3>Real-Time Tracking</h3>
+            <p>Every issue gets a live status tracker — from submission to resolution. You're always in the loop.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon" style="background:linear-gradient(135deg,#059669,#34D399)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87m-4-12a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <h3>Community Upvoting</h3>
+            <p>Issues with more upvotes get prioritized. Your collective voice drives faster, better resolutions.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon" style="background:linear-gradient(135deg,#DC2626,#F87171)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            </div>
+            <h3>Smart Notifications</h3>
+            <p>Get notified when your issue status changes, when authorities respond, or when similar issues are merged.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon" style="background:linear-gradient(135deg,#D97706,#FBBF24)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            </div>
+            <h3>Analytics Dashboard</h3>
+            <p>See campus-wide issue trends, resolution rates by category, and your personal impact score.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon" style="background:linear-gradient(135deg,#7E22CE,#C084FC)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+            <h3>Anonymous Option</h3>
+            <p>Not comfortable revealing your identity? Report anonymously while still tracking your issue privately.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- How it works -->
+      <section class="how-section">
+        <div class="section-header">
+          <div class="section-tag">Simple Process</div>
+          <h2>Report to <span class="gradient-text">Resolved</span> in 3 Steps</h2>
+        </div>
+        <div class="steps-row">
+          <div class="step">
+            <div class="step-num">01</div>
+            <div class="step-icon">📸</div>
+            <h3>Spot & Report</h3>
+            <p>See an issue? Tap report. Add a photo, description, and location. Done in 60 seconds.</p>
+          </div>
+          <div class="step-arrow">→</div>
+          <div class="step">
+            <div class="step-num">02</div>
+            <div class="step-icon">⚡</div>
+            <h3>Auto-Routed</h3>
+            <p>Our system instantly routes your issue to the right authority — maintenance, IT, admin, or security.</p>
+          </div>
+          <div class="step-arrow">→</div>
+          <div class="step">
+            <div class="step-num">03</div>
+            <div class="step-icon">✅</div>
+            <h3>Track & Celebrate</h3>
+            <p>Follow the fix in real-time. When resolved, earn CampusCare points and thank your campus heroes.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Categories -->
+      <section class="categories-section">
+        <div class="section-header">
+          <div class="section-tag">Issue Categories</div>
+          <h2>We handle <span class="gradient-text">every</span> campus concern</h2>
+        </div>
+        <div class="categories-grid">
+          <div class="cat-card" data-category="Infrastructure">
+            <div class="cat-emoji">🏗️</div>
+            <span>Infrastructure</span>
+            <div class="cat-count">1,243 resolved</div>
+          </div>
+          <div class="cat-card" data-category="WiFi & Tech">
+            <div class="cat-emoji">📶</div>
+            <span>WiFi & Tech</span>
+            <div class="cat-count">892 resolved</div>
+          </div>
+          <div class="cat-card" data-category="Sanitation">
+            <div class="cat-emoji">🧹</div>
+            <span>Sanitation</span>
+            <div class="cat-count">654 resolved</div>
+          </div>
+          <div class="cat-card" data-category="Safety">
+            <div class="cat-emoji">🛡️</div>
+            <span>Safety</span>
+            <div class="cat-count">321 resolved</div>
+          </div>
+          <div class="cat-card" data-category="Academics">
+            <div class="cat-emoji">📚</div>
+            <span>Academics</span>
+            <div class="cat-count">478 resolved</div>
+          </div>
+          <div class="cat-card" data-category="Hostel">
+            <div class="cat-emoji">🏠</div>
+            <span>Hostel</span>
+            <div class="cat-count">567 resolved</div>
+          </div>
+          <div class="cat-card" data-category="Canteen">
+            <div class="cat-emoji">🍽️</div>
+            <span>Canteen</span>
+            <div class="cat-count">234 resolved</div>
+          </div>
+          <div class="cat-card" data-category="Transport">
+            <div class="cat-emoji">🚌</div>
+            <span>Transport</span>
+            <div class="cat-count">198 resolved</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA Banner -->
+      <section class="cta-section">
+        <div class="cta-inner">
+          <div class="cta-orb"></div>
+          <h2>Ready to make a difference?</h2>
+          <p>Join thousands of students already improving their campus — one report at a time.</p>
+          <button class="btn btn-white btn-xl" id="cta-signup-btn">Join CampusCare Free</button>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <div class="footer-inner">
+          <div class="footer-brand">
+            <div class="logo">
+              <div class="logo-icon">
+                <svg viewBox="0 0 36 36" fill="none"><circle cx="18" cy="18" r="18" fill="url(#lg2)"/><path d="M10 24L18 10L26 24H10Z" fill="white" opacity="0.9"/><circle cx="18" cy="20" r="4" fill="white" opacity="0.6"/><defs><linearGradient id="lg2" x1="0" y1="0" x2="36" y2="36"><stop stop-color="#7C3AED"/><stop offset="1" stop-color="#2563EB"/></linearGradient></defs></svg>
+              </div>
+              <span class="logo-text">Campus<span class="logo-accent">Care</span></span>
+            </div>
+            <p>Empowering students to build better campuses.</p>
+          </div>
+          <div class="footer-links">
+            <div class="fl-col"><h4>Product</h4><a href="#">Features</a><a href="#">How it works</a><a href="#">Pricing</a></div>
+            <div class="fl-col"><h4>Campus</h4><a href="#">Report Issue</a><a href="#">Browse Issues</a><a href="#">Leaderboard</a></div>
+            <div class="fl-col"><h4>Company</h4><a href="#">About</a><a href="#">Contact</a><a href="#">Privacy</a></div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span>© 2026 CampusCare. Made with ❤️ for Students.</span>
+        </div>
+      </footer>
+    </div>
+
+    <!-- FEED PAGE -->
+    <div id="page-feed" class="page">
+      <div class="page-container">
+        <div class="page-header-row">
+          <div>
+            <h1 class="page-title">Browse Issues</h1>
+            <p class="page-subtitle">Track campus issues and upvote what matters most</p>
+          </div>
+          <button class="btn btn-primary" id="feed-report-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><path d="M12 5v14M5 12l7-7 7 7"/></svg>
+            Report Issue
+          </button>
+        </div>
+        <!-- Filters -->
+        <div class="filter-bar">
+          <div class="filter-search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="text" id="search-input" placeholder="Search issues..." />
+          </div>
+          <div class="filter-chips" id="filter-chips">
+            <button class="chip active" data-filter="all">All</button>
+            <button class="chip" data-filter="open">Open</button>
+            <button class="chip" data-filter="in-progress">In Progress</button>
+            <button class="chip" data-filter="resolved">Resolved</button>
+          </div>
+          <div class="filter-select-wrap">
+            <select id="cat-filter" class="filter-select">
+              <option value="all">All Categories</option>
+              <option value="Infrastructure">Infrastructure</option>
+              <option value="WiFi & Tech">WiFi & Tech</option>
+              <option value="Sanitation">Sanitation</option>
+              <option value="Safety">Safety</option>
+              <option value="Academics">Academics</option>
+              <option value="Hostel">Hostel</option>
+              <option value="Canteen">Canteen</option>
+              <option value="Transport">Transport</option>
+            </select>
+          </div>
+          <div class="filter-select-wrap">
+            <select id="sort-filter" class="filter-select">
+              <option value="newest">Newest First</option>
+              <option value="most-upvoted">Most Upvoted</option>
+              <option value="oldest">Oldest First</option>
+            </select>
+          </div>
+        </div>
+        <!-- Issues Grid -->
+        <div class="issues-grid" id="issues-grid"></div>
+        <div class="empty-state" id="empty-state" style="display:none">
+          <div class="empty-icon">🔍</div>
+          <h3>No issues found</h3>
+          <p>Try adjusting your filters or be the first to report this issue!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- REPORT PAGE -->
+    <div id="page-report" class="page">
+      <div class="page-container" style="max-width:700px">
+        <div class="page-header-row">
+          <div>
+            <h1 class="page-title">Report an Issue</h1>
+            <p class="page-subtitle">Help us fix your campus — every report counts</p>
+          </div>
+        </div>
+        <form class="report-form glass-card" id="report-form">
+          <div class="form-group">
+            <label class="form-label">Issue Title <span class="req">*</span></label>
+            <input type="text" class="form-input" id="issue-title" placeholder="Brief description of the issue" required maxlength="100"/>
+            <span class="char-count" id="title-count">0/100</span>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Category <span class="req">*</span></label>
+              <select class="form-input" id="issue-category" required>
+                <option value="">Select category</option>
+                <option value="Infrastructure">🏗️ Infrastructure</option>
+                <option value="WiFi & Tech">📶 WiFi & Tech</option>
+                <option value="Sanitation">🧹 Sanitation</option>
+                <option value="Safety">🛡️ Safety</option>
+                <option value="Academics">📚 Academics</option>
+                <option value="Hostel">🏠 Hostel</option>
+                <option value="Canteen">🍽️ Canteen</option>
+                <option value="Transport">🚌 Transport</option>
+                <option value="Other">📌 Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Priority</label>
+              <select class="form-input" id="issue-priority">
+                <option value="low">🟢 Low</option>
+                <option value="medium" selected>🟡 Medium</option>
+                <option value="high">🔴 High</option>
+                <option value="urgent">🚨 Urgent</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Location <span class="req">*</span></label>
+            <input type="text" class="form-input" id="issue-location" placeholder="e.g. Library Block B, Room 204, Gate 3..." required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Description <span class="req">*</span></label>
+            <textarea class="form-input form-textarea" id="issue-desc" placeholder="Describe the issue in detail. What happened? When did you first notice it? How does it affect you?" required maxlength="1000"></textarea>
+            <span class="char-count" id="desc-count">0/1000</span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Photo Evidence</label>
+            <div class="upload-zone" id="upload-zone">
+              <div class="upload-icon">📷</div>
+              <p>Drop photo here or <u>click to browse</u></p>
+              <small>JPEG, PNG up to 5MB</small>
+              <input type="file" id="photo-input" accept="image/*" style="display:none" />
+            </div>
+            <div class="photo-preview" id="photo-preview"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label check-label">
+              <input type="checkbox" id="anonymous-check" />
+              <span class="checkmark"></span>
+              Submit anonymously
+            </label>
+            <small class="form-hint">Your identity will not be visible to other students, but admins can still contact you if needed.</small>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn btn-ghost" id="form-cancel">Cancel</button>
+            <button type="submit" class="btn btn-primary btn-lg" id="form-submit">
+              <span id="submit-text">Submit Report</span>
+              <div class="btn-loader" id="submit-loader" style="display:none"></div>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- DASHBOARD PAGE -->
+    <div id="page-dashboard" class="page">
+      <div class="page-container">
+        <div class="page-header-row">
+          <div>
+            <h1 class="page-title">My Dashboard</h1>
+            <p class="page-subtitle" id="dash-welcome">Welcome back!</p>
+          </div>
+          <button class="btn btn-primary" id="dash-report-btn">
+            + New Report
+          </button>
+        </div>
+        <!-- Stats -->
+        <div class="dash-stats">
+          <div class="dash-stat-card">
+            <div class="dsc-icon" style="background:linear-gradient(135deg,#7C3AED,#A855F7)">📋</div>
+            <div class="dsc-body">
+              <span class="dsc-num" id="stat-total">0</span>
+              <span class="dsc-label">Total Reports</span>
+            </div>
+          </div>
+          <div class="dash-stat-card">
+            <div class="dsc-icon" style="background:linear-gradient(135deg,#059669,#34D399)">✅</div>
+            <div class="dsc-body">
+              <span class="dsc-num" id="stat-resolved">0</span>
+              <span class="dsc-label">Resolved</span>
+            </div>
+          </div>
+          <div class="dash-stat-card">
+            <div class="dsc-icon" style="background:linear-gradient(135deg,#2563EB,#60A5FA)">⚡</div>
+            <div class="dsc-body">
+              <span class="dsc-num" id="stat-progress">0</span>
+              <span class="dsc-label">In Progress</span>
+            </div>
+          </div>
+          <div class="dash-stat-card">
+            <div class="dsc-icon" style="background:linear-gradient(135deg,#D97706,#FBBF24)">⬆️</div>
+            <div class="dsc-body">
+              <span class="dsc-num" id="stat-upvotes">0</span>
+              <span class="dsc-label">Upvotes Received</span>
+            </div>
+          </div>
+        </div>
+        <h2 class="section-title">My Reports</h2>
+        <div class="issues-grid" id="my-issues-grid"></div>
+        <div class="empty-state" id="my-empty-state" style="display:none">
+          <div class="empty-icon">📋</div>
+          <h3>No reports yet</h3>
+          <p>Start making your campus better — report your first issue!</p>
+          <button class="btn btn-primary" id="dash-first-report">Report an Issue</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ISSUE DETAIL PAGE -->
+    <div id="page-detail" class="page">
+      <div class="page-container" style="max-width:800px">
+        <button class="back-btn" id="back-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+          Back to Issues
+        </button>
+        <div id="detail-content"></div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Auth Modal -->
+  <div class="modal-overlay" id="auth-modal" style="display:none">
+    <div class="modal glass-card" id="auth-modal-box">
+      <button class="modal-close" id="modal-close">✕</button>
+      <div id="auth-tabs">
+        <button class="auth-tab active" data-tab="login">Sign In</button>
+        <button class="auth-tab" data-tab="signup">Sign Up</button>
+      </div>
+
+      <!-- Login Form -->
+      <div id="tab-login">
+        <div class="modal-header">
+          <h2>Welcome Back</h2>
+          <p>Sign in to your CampusCare account</p>
+        </div>
+        <form id="login-form" class="auth-form">
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-input" id="login-email" placeholder="you@university.edu" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input type="password" class="form-input" id="login-pass" placeholder="••••••••" required />
+          </div>
+          <div class="auth-error" id="login-error"></div>
+          <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+          <p class="auth-switch">Don't have an account? <a href="#" data-tab="signup">Sign Up</a></p>
+        </form>
+      </div>
+
+      <!-- Signup Form -->
+      <div id="tab-signup" style="display:none">
+        <div class="modal-header">
+          <h2>Join CampusCare</h2>
+          <p>Create your student account</p>
+        </div>
+        <form id="signup-form" class="auth-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">First Name</label>
+              <input type="text" class="form-input" id="signup-fname" placeholder="Alex" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Last Name</label>
+              <input type="text" class="form-input" id="signup-lname" placeholder="Johnson" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Student Email</label>
+            <input type="email" class="form-input" id="signup-email" placeholder="you@university.edu" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">University / Campus</label>
+            <input type="text" class="form-input" id="signup-campus" placeholder="e.g. MIT, IIT Delhi..." required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input type="password" class="form-input" id="signup-pass" placeholder="••••••••" required minlength="6"/>
+          </div>
+          <div class="auth-error" id="signup-error"></div>
+          <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+          <p class="auth-switch">Already have an account? <a href="#" data-tab="login">Sign In</a></p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Toast -->
+  <div class="toast" id="toast">
+    <span class="toast-icon">✅</span>
+    <span id="toast-msg">Issue reported successfully!</span>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
