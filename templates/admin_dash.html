@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - CampusCare{% endblock title %}
+
+{% block body %}
+<div class="container">
+    <div class="card login-card" style="max-width: 1100px;">
+        <h2 class="center">Admin Dashboard</h2>
+        <p style="text-align:center; color:#666; margin-bottom:20px;">
+            View all reported issues and update their status
+        </p>
+
+        {% if success %}
+            <div class="success-message">{{ success }}</div>
+        {% endif %}
+
+        {% if error %}
+            <div class="error-message">{{ error }}</div>
+        {% endif %}
+
+        {% if issues %}
+            <div style="overflow-x:auto;">
+                <table style="width:100%; border-collapse:collapse; margin-top:20px;">
+                    <thead>
+                        <tr style="background:#f5f5f5;">
+                            <th style="padding:12px; border:1px solid #ddd;">Category</th>
+                            <th style="padding:12px; border:1px solid #ddd;">Subcategory</th>
+                            <th style="padding:12px; border:1px solid #ddd;">Location</th>
+                            <th style="padding:12px; border:1px solid #ddd;">Description</th>
+                            <th style="padding:12px; border:1px solid #ddd;">Students Affected</th>
+                            <th style="padding:12px; border:1px solid #ddd;">Severity</th>
+                            <th style="padding:12px; border:1px solid #ddd;">Current Status</th>
+                            <th style="padding:12px; border:1px solid #ddd;">Update Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for issue in issues %}
+                        <tr>
+                            <td style="padding:12px; border:1px solid #ddd;">{{ issue.category }}</td>
+                            <td style="padding:12px; border:1px solid #ddd;">{{ issue.subcategory }}</td>
+                            <td style="padding:12px; border:1px solid #ddd;">{{ issue.location }}</td>
+                            <td style="padding:12px; border:1px solid #ddd;">{{ issue.description }}</td>
+                            <td style="padding:12px; border:1px solid #ddd;">{{ issue.students_affected }}</td>
+                            <td style="padding:12px; border:1px solid #ddd;">{{ issue.severity }}</td>
+                            <td style="padding:12px; border:1px solid #ddd; font-weight:bold;">
+                                {% if issue.status == "Pending" %}
+                                    <span style="color:orange;">{{ issue.status }}</span>
+                                {% elif issue.status == "Process" %}
+                                    <span style="color:blue;">{{ issue.status }}</span>
+                                {% elif issue.status == "Resolved" %}
+                                    <span style="color:green;">{{ issue.status }}</span>
+                                {% else %}
+                                    <span>{{ issue.status }}</span>
+                                {% endif %}
+                            </td>
+                            <td style="padding:12px; border:1px solid #ddd;">
+                                <form method="POST" action="{{ url_for('update_issue_status', issue_id=issue._id) }}" style="display:flex; gap:8px; align-items:center;">
+                                    <select name="status" class="input" required style="min-width:130px;">
+                                        <option value="">Select</option>
+                                        <option value="Pending" {% if issue.status == "Pending" %}selected{% endif %}>Pending</option>
+                                        <option value="Process" {% if issue.status == "Process" %}selected{% endif %}>Process</option>
+                                        <option value="Resolved" {% if issue.status == "Resolved" %}selected{% endif %}>Resolved</option>
+                                    </select>
+                                    <button type="submit" class="btn-sign">Update</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p style="text-align:center; margin-top:20px;">No issues found.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock body %}
