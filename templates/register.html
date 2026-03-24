@@ -15,33 +15,49 @@
       <div class="error-message">{{ error }}</div>
     {% endif %}
 
-    <form method="POST" action="/register" style="display:grid;gap:12px;margin-top:14px" data-validate>
+    <form method="POST" action="/register" style="display:grid;gap:12px;margin-top:14px">
 
+      <!-- USER TYPE -->
       <div>
-        <label for="name">Name</label>
-        <input id="name" name="name" class="input" placeholder="Full Name" required>
+        <label>User Type</label>
+        <select class="input" name="category" id="category" required onchange="toggleStudentCode()">
+          <option value="">Select User Type</option>
+          <option value="Student">Student</option>
+          <option value="Admin">Admin</option>
+        </select>
       </div>
 
+      <!-- NAME -->
       <div>
-        <label for="student_code">Student Code</label>
-         <input type="text" id="student_code" name="student_code" class="input" placeholder="Enter your student code" required>
-      </div>
-      
-      <div>
-        <label for="phone">Phone Number</label>
-        <input id="phone" name="phone" class="input" placeholder="Phone Number" required>
+        <label>Name</label>
+        <input name="name" class="input" placeholder="Full Name" required>
       </div>
 
-      <div>
-        <label for="email">Email</label>
-        <input id="email" name="email" type="email" class="input" placeholder="Email" required>
+      <!-- STUDENT CODE (ONLY FOR STUDENT) -->
+      <div id="studentCodeDiv">
+        <label>Student Code</label>
+        <input type="text" name="student_code" class="input" placeholder="Enter your student code">
       </div>
 
+      <!-- PHONE -->
       <div>
-        <label for="password">Password</label>
-        <input id="password" name="password" type="password" class="input" placeholder="Password" required>
+        <label>Phone Number</label>
+        <input name="phone" class="input" placeholder="Phone Number" required>
       </div>
 
+      <!-- EMAIL -->
+      <div>
+        <label>Email</label>
+        <input name="email" type="email" class="input" placeholder="Email" required>
+      </div>
+
+      <!-- PASSWORD -->
+      <div>
+        <label>Password</label>
+        <input name="password" type="password" class="input" placeholder="Password" required>
+      </div>
+
+      <!-- BUTTON -->
       <div class="login-meta">
         <div class="inline-links">
           Already have an account? <a href="{{ url_for('login') }}">Sign in</a>
@@ -55,4 +71,18 @@
     </form>
   </div>
 </div>
+<script>
+  function toggleStudentCode() {
+    let role = document.getElementById("category").value;
+    let div = document.getElementById("studentCodeDiv");
+
+    if (role === "Student") {
+        div.style.display = "block";
+    } else {
+        div.style.display = "none";
+    }
+}
+  // Initially hide student code field
+  toggleStudentCode();
+</script>
 {% endblock body %}
