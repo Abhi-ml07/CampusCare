@@ -1,3 +1,4 @@
+from bson import ObjectId
 from flask import Flask, render_template, request, redirect, url_for
 from datetime import datetime
 from flask import session
@@ -107,116 +108,34 @@ def contact():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    if request.method == "POST":
-        category = request.form.get("category")
-        name = request.form.get("name")
-        student_code = request.form.get("student_code")
-        phone = request.form.get("phone")
-        email = request.form.get("email")
-        password = request.form.get("password")
-
-        if not category:
-            return render_template("register.html", error="Please select user type")
-
-        if not name or not phone or not email or not password:
-            return render_template("register.html", error="Please fill all required fields")
-
-        hashed_password = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
-
-        if category == "Student":
-            if not student_code:
-                return render_template("register.html", error="Student code is required for students")
-
-            existing_user = mongo.db.users.find_one({
-                "$or": [
-                    {"email": email},
-                    {"student_code": student_code}
-                ]
-            })
-
-            if existing_user:
-                return render_template("register.html", error="Student already exists")
-
-            mongo.db.users.insert_one({
-                "name": name,
-                "student_code": student_code,
-                "phone": phone,
-                "email": email,
-                "password": hashed_password,
-                "role": "student",
-                "created_at": datetime.utcnow()
-            })
-
-            return render_template("register.html", created=True)
-
-        elif category == "Admin":
-            if session.get("role") != "admin":
-                return render_template("register.html", error="Only admin can create admin account")
-
-            existing_admin = mongo.db.admin.find_one({
-                "email": email
-            })
-
-            if existing_admin:
-                return render_template("register.html", error="Admin already exists")
-
-            mongo.db.admin.insert_one({
-                "name": name,
-                "phone": phone,
-                "email": email,
-                "password": hashed_password,
-                "role": "admin",
-                "created_at": datetime.utcnow()
-            })
-
-            return render_template("register.html", created=True)
-
-        else:
-            return render_template("register.html", error="Invalid user type")
-
-    return render_template("register.html")
+    pass
 
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    if request.method == "POST":
-        category = request.form.get("category")
-        identifier = request.form.get("student_code")
-        password = request.form.get("password")
+    pass
 
-        if category == "Student":
-            user = mongo.db.users.find_one({
-                "$or": [
-                    {"email": identifier},
-                    {"student_code": identifier}
-                ]
-            })
 
-            if user and bcrypt.checkpw(password.encode("utf-8"), user["password"]):
-                session["user"] = user.get("name")
-                session["email"] = user.get("email")
-                session["role"] = "student"
-                return redirect(url_for("dashboard"))
-            else:
-                return render_template("login.html", error="Invalid student login details")
+@app.route("/admin")
+def admin_dashboard():
+    if 'user' not in session or session.get("role") != "admin":
+        return redirect(url_for("login"))
+    issues = list(mongo.db.issues.find().sort("created_at", -1))
+    return render_template("admin_dash.html", issues=issues)
 
-        elif category == "Admin":
-            admin = mongo.db.admin.find_one({
-                "email": identifier
-            })
 
-            if admin and bcrypt.checkpw(password.encode("utf-8"), admin["password"]):
-                session["user"] = admin.get("name")
-                session["email"] = admin.get("email")
-                session["role"] = "admin"
-                return redirect(url_for("admin_dashboard"))
-            else:
-                return render_template("login.html", error="Invalid admin login details")
+@app.route("/admin_login", methods=["GET", "POST"])
+def admin_login():
+    pass
 
-        return render_template("login.html", error="Please select user type")
-
-    return render_template("login.html")
-
+    @app.route("/like_issue/<issue_id>", methods=["POST"])
+    def like_issue(issue_id):
+        if 'user' not in session:
+            return redirect(url_for("login"))
+        mongo.db.issues.update_one(
+            {"_id": ObjectId(issue_id)},
+            {"$inc": {"likes": 1}}
+        )
 
 @app.route("/logout", methods=["POST"])
 def logout():
