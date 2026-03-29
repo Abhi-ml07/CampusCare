@@ -18,13 +18,12 @@
     <form method="POST" action="/register" style="display:grid;gap:12px;margin-top:14px">
 
       <!-- USER TYPE -->
-      <div>
-        <label>User Type</label>
-        <select class="input" name="category" id="category" required onchange="toggleStudentCode()">
-          <option value="">Select User Type</option>
-          <option value="Student">Student</option>
-          <option value="Admin"><a href="{{ url_for('adminregister') }}">Admin</a></option>
-        </select>
+      <div class="account-type">
+          <input type="radio" id="student" name="role" value="student" checked>
+          <label for="student">Student</label>
+
+          <input type="radio" id="admin" name="role" value="admin">
+          <label for="admin"><a href="{{ url_for('adminregister') }}">Admin</a></label>
       </div>
 
       <!-- NAME -->

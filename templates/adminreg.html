@@ -1,21 +1,17 @@
 {% extends "base.html" %}
 
-{% block title %}Register - CampusCare{% endblock title %}
+{% block title %}Admin Register - CampusCare{% endblock title %}
 
 {% block body %}
 <div class="container">
   <div class="card login-card">
-    <h2 class="center">Create Account</h2>
-
-    {% if created %}
-      <div class="success-message">Account created successfully. You can now log in.</div>
-    {% endif %}
+    <h2 class="center">Admin Registration</h2>
 
     {% if error %}
       <div class="error-message">{{ error }}</div>
     {% endif %}
 
-    <form method="POST" action="/register" style="display:grid;gap:12px;margin-top:14px">
+    <form method="POST" action="/adminregister" style="display:grid;gap:12px;margin-top:14px">
 
       <!-- NAME -->
       <div>
@@ -38,29 +34,15 @@
       <!-- BUTTON -->
       <div class="login-meta">
         <div class="inline-links">
-          Already have an account? <a href="{{ url_for('adminlogin') }}">Sign in</a>
+          Already have an account? <a href="{{ url_for('admin_login') }}">Sign in</a>
         </div>
 
         <div style="display:flex;align-items:center;gap:12px">
-          <button class="btn-sign" type="submit">Create Account</button>
+          <button class="btn-sign" type="submit">Create Admin Account</button>
         </div>
       </div>
 
     </form>
   </div>
 </div>
-<script>
-  function toggleStudentCode() {
-    let role = document.getElementById("category").value;
-    let div = document.getElementById("studentCodeDiv");
-
-    if (role === "Student") {
-        div.style.display = "block";
-    } else {
-        div.style.display = "none";
-    }
-}
-  // Initially hide student code field
-  toggleStudentCode();
-</script>
 {% endblock body %}

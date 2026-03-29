@@ -154,6 +154,38 @@ body{
     left: 100%;
 }
 
+/* ACCOUNT TOGGEL */
+
+.account-type {
+    display: flex;
+    background: transparent;          /* transparent background */
+    border: 1px solid #374151;        /* subtle border */
+    border-radius: 20px;               /* smaller radius */
+    padding: 3px;                     /* reduced padding */
+    width: 200px;                     /* smaller width */
+    margin: 10px auto;                /* centered & less space */
+}
+
+.account-type input {
+    display: none;
+}
+
+.account-type label {
+    flex: 1;
+    padding: 10px;
+    border-radius: 20px;   /* reduced from 20px */
+    cursor: pointer;
+    transition: 0.3s;
+    color: #9ca3af;
+}
+
+/* Active Button */
+.account-type input:checked + label {
+    background: linear-gradient(45deg, #6366f1, #8b5cf6);
+    color: white;
+}
+
+
 
 /* Hero */
 .hero{display:grid;grid-template-columns:1fr 360px;gap:28px;align-items:start;padding:38px 0}

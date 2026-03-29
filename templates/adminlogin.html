@@ -1,27 +1,31 @@
 {% extends "base.html" %}
 
-{% block title %}Login - CampusCare{% endblock title %}
+{% block title %}Admin Login - CampusCare{% endblock title %}
 
 {% block body %}
 <div class="container">
   <div class="card login-card">
-    <h2 class="center">Sign in to CampusCare</h2>
+    <h2 class="center">Admin Sign in</h2>
 
-    <form method="post" action="{{ url_for('adminlogin') }}" style="display:grid;gap:12px;margin-top:14px">
+    {% if error %}
+      <div class="error-message">{{ error }}</div>
+    {% endif %}
+
+    <form method="post" action="{{ url_for('admin_login') }}" style="display:grid;gap:12px;margin-top:14px">
       
       <div>
-        <label for="Email"> Email </label>
-        <input id="Email" name="Email" class="input" required>
+        <label for="Email">Email</label>
+        <input id="Email" name="Email" class="input" placeholder="Admin Email" required>
       </div>
 
       <div>
         <label for="password">Password</label>
-        <input id="password" name="password" type="password" class="input" required>
+        <input id="password" name="password" type="password" class="input" placeholder="Password" required>
       </div>
 
       <div class="login-meta">
         <div class="inline-links">
-          New to CampusCare? <a href="{{ url_for('register') }}">Create Account</a>
+          New Admin? <a href="{{ url_for('adminregister') }}">Create Account</a>
         </div>
 
         <div style="display:flex;align-items:center;gap:12px">
@@ -31,11 +35,6 @@
       </div>
 
     </form>
-
-    {% if error %}
-      <div class="error-message">{{ error }}</div>
-    {% endif %}
-
   </div>
 </div>
 {% endblock body %}
