@@ -108,12 +108,60 @@ def contact():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    pass
+    if request.method == "POST":
+        name = request.form.get("name")
+        email = request.form.get("email")
+        password = request.form.get("password").encode('utf-8')
 
+        if mongo.db.users.find_one({"email": email}):
+            return render_template("register.html", error="Email already registered")
+
+        hashed_password = bcrypt.hashpw(password, bcrypt.gensalt())
+        mongo.db.users.insert_one({
+            "name": name,
+            "email": email,
+            "password": hashed_password,
+            "role": "user"
+        })
+        return redirect(url_for("login"))
+    return render_template("register.html")
+
+
+@app.route("/adminregister", methods=["GET", "POST"])
+def adminregister():
+    if request.method == "POST":
+        name = request.form.get("name")
+        email = request.form.get("email")
+        password = request.form.get("password").encode('utf-8')
+
+        if mongo.db.users.find_one({"email": email}):
+            return render_template("adminreg.html", error="Email already registered")
+
+        hashed_password = bcrypt.hashpw(password, bcrypt.gensalt())
+        mongo.db.users.insert_one({
+            "name": name,
+            "email": email,
+            "password": hashed_password,
+            "role": "admin"
+        })
+        return redirect(url_for("admin_login"))
+    return render_template("adminreg.html")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    pass
+    if request.method == "POST":
+        email = request.form.get("email")
+        password = request.form.get("password").encode('utf-8')
+
+        user = mongo.db.users.find_one({"email": email})
+        if user and bcrypt.checkpw(password, user["password"]):
+            session["user"] = user["name"]
+            session["email"] = user["email"]
+            session["role"] = user.get("role", "user")
+            return redirect(url_for("dashboard"))
+        else:
+            return render_template("login.html", error="Invalid email or password")
+    return render_template("login.html")
 
 
 @app.route("/admin")
@@ -126,10 +174,23 @@ def admin_dashboard():
 
 @app.route("/admin_login", methods=["GET", "POST"])
 def admin_login():
-    pass
+    if request.method == "POST":
+        email = request.form.get("Email")
+        password = request.form.get("password").encode('utf-8')
 
-    @app.route("/like_issue/<issue_id>", methods=["POST"])
-    def like_issue(issue_id):
+        user = mongo.db.users.find_one({"email": email})
+        if user and bcrypt.checkpw(password, user["password"]) and user.get("role") == "admin":
+            session["user"] = user["name"]
+            session["email"] = user["email"]
+            session["role"] = user.get("role", "user")
+            return redirect(url_for("admin_dashboard"))
+        else:
+            return render_template("adminlogin.html", error="Invalid email or password")
+    return render_template("adminlogin.html")
+
+
+@app.route("/like_issue/<issue_id>", methods=["POST"])
+def like_issue(issue_id):
         if 'user' not in session:
             return redirect(url_for("login"))
         mongo.db.issues.update_one(
