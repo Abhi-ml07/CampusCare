@@ -10,15 +10,6 @@
     <form method="post" action="{{ url_for('login') }}" style="display:grid;gap:12px;margin-top:14px">
       
       <div>
-      <label>user type</label>
-       <select class="input" name="category" required>
-          <option value="">Select User Type</option>
-          <option>Admin<a href="{{ url_for('admin_login') }}">Admin</a></option>
-          <option>Student</option>
-        </select>
-      </div>
-      
-      <div>
         <label for="student_code">Student Code or Email</label>
         <input id="student_code" name="student_code" class="input" required>
       </div>

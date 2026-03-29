@@ -7,11 +7,11 @@
   <div class="card login-card">
     <h2 class="center">Sign in to CampusCare</h2>
 
-    <form method="post" action="{{ url_for('login') }}" style="display:grid;gap:12px;margin-top:14px">
-
+    <form method="post" action="{{ url_for('adminlogin') }}" style="display:grid;gap:12px;margin-top:14px">
+      
       <div>
-        <label for="Email">Email</label>
-        <input id="Email" name="Email" class="input" required>
+        <label for="student_code"> Email </label>
+        <input id="student_code" name="student_code" class="input" required>
       </div>
 
       <div>
