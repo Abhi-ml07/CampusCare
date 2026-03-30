@@ -3,44 +3,256 @@
 {% block title %}Login - CampusCare{% endblock title %}
 
 {% block body %}
-<div class="container">
-  <div class="card login-card">
-    <h2 class="center">Sign in to CampusCare</h2>
+<style>
+    .login-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: calc(100vh - 80px);
+        padding: 20px;
+    }
 
-    <form method="post" action="{{ url_for('login') }}" style="display:grid;gap:12px;margin-top:14px">
-      <div>
-        <select>
-          <option value="student">Student</option>
-          <option value="admin"><a href="{{ url_for('admin_login') }}">Admin</a></option>
-        </select>
-      </div>
-      <div>
-        <label for="student_code">Student Code or Email</label>
-        <input id="student_code" name="student_code" class="input" required>
-      </div>
+    .login-card {
+        background: linear-gradient(135deg, rgba(11, 18, 32, 0.8), rgba(7, 16, 41, 0.9));
+        border: 1px solid rgba(124, 58, 237, 0.2);
+        border-radius: 12px;
+        padding: 40px;
+        max-width: 420px;
+        width: 100%;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
 
-      <div>
-        <label for="password">Password</label>
-        <input id="password" name="password" type="password" class="input" required>
-      </div>
+    .login-card h2 {
+        text-align: center;
+        margin: 0 0 10px 0;
+        font-size: 1.8rem;
+        background: linear-gradient(90deg, #7c3aed, #06b6d4);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
 
-      <div class="login-meta">
-        <div class="inline-links">
-          New to CampusCare? <a href="{{ url_for('register') }}">Create Account</a>
+    .login-subtitle {
+        text-align: center;
+        color: var(--muted);
+        margin-bottom: 30px;
+        font-size: 0.9rem;
+    }
+
+    .login-type-selector {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 30px;
+    }
+
+    .login-type-btn {
+        padding: 12px 16px;
+        border-radius: 8px;
+        border: 2px solid rgba(124, 58, 237, 0.3);
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--muted);
+        font-weight: 600;
+        cursor: pointer;
+        transition: all var(--transition);
+        text-decoration: none;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .login-type-btn.active {
+        background: linear-gradient(90deg, var(--accent), var(--accent-2));
+        border-color: var(--accent);
+        color: white;
+        box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+    }
+
+    .login-type-btn:hover {
+        border-color: var(--accent);
+        color: #fff;
+    }
+
+    .form-group {
+        display: grid;
+        gap: 8px;
+        margin-bottom: 18px;
+    }
+
+    .form-group label {
+        color: #e6eef8;
+        font-weight: 600;
+        font-size: 0.95rem;
+    }
+
+    .form-group input {
+        padding: 12px 14px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.05);
+        color: #e6eef8;
+        font-size: 0.95rem;
+        transition: all var(--transition);
+    }
+
+    .form-group input::placeholder {
+        color: var(--muted);
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: var(--accent);
+        background: rgba(124, 58, 237, 0.1);
+        box-shadow: 0 0 8px rgba(124, 58, 237, 0.2);
+    }
+
+    .login-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-top: 24px;
+        margin-bottom: 20px;
+    }
+
+    .forgot-link {
+        color: var(--accent);
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: color var(--transition);
+    }
+
+    .forgot-link:hover {
+        color: var(--accent-2);
+        text-decoration: underline;
+    }
+
+    .btn-sign {
+        padding: 12px 28px;
+        border-radius: 8px;
+        background: linear-gradient(90deg, var(--accent), var(--accent-2));
+        border: none;
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all var(--transition);
+        white-space: nowrap;
+    }
+
+    .btn-sign:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+    }
+
+    .btn-sign:active {
+        transform: scale(0.95);
+    }
+
+    .login-footer {
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.9rem;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(124, 58, 237, 0.1);
+    }
+
+    .login-footer a {
+        color: var(--accent);
+        text-decoration: none;
+        transition: color var(--transition);
+    }
+
+    .login-footer a:hover {
+        color: var(--accent-2);
+        text-decoration: underline;
+    }
+
+    .error-message {
+        background: rgba(239, 68, 68, 0.15);
+        color: #fca5a5;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        padding: 12px 14px;
+        border-radius: 8px;
+        margin-top: 15px;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+</style>
+
+<div class="login-container">
+    <div class="login-card">
+        <h2>🔐 CampusCare</h2>
+        <p class="login-subtitle">Campus Issue Management System</p>
+
+        <!-- Login Type Selector -->
+        <div class="login-type-selector">
+            <button type="button" class="login-type-btn active" onclick="showStudentLogin()">
+                <span>👨‍🎓</span>
+                <span>Student</span>
+            </button>
+            <a href="{{ url_for('admin_login') }}" class="login-type-btn">
+                <span>🔐</span>
+                <span>Admin</span>
+            </a>
         </div>
 
-        <div style="display:flex;align-items:center;gap:12px">
-          <a class="forgot-link" href="/forgot">Forgot Password?</a>
-          <button class="btn-sign" type="submit">Sign in</button>
+        <!-- Login Form -->
+        <form method="post" action="{{ url_for('login') }}" style="display: grid; gap: 0;">
+            <div class="form-group">
+                <label for="email">📧 Email Address</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    class="input" 
+                    placeholder="Enter your email"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="password">🔑 Password</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    class="input" 
+                    placeholder="Enter your password"
+                    required
+                >
+            </div>
+
+            <div class="login-actions">
+                <a href="/forgot" class="forgot-link">Forgot Password?</a>
+                <button class="btn-sign" type="submit">Sign In</button>
+            </div>
+        </form>
+
+        <!-- Error Message -->
+        {% if error %}
+            <div class="error-message">
+                <span>⚠️</span>
+                <span>{{ error }}</span>
+            </div>
+        {% endif %}
+
+        <!-- Footer -->
+        <div class="login-footer">
+            Don't have an account? <a href="{{ url_for('register') }}">Create one here</a>
         </div>
-      </div>
-
-    </form>
-
-    {% if error %}
-      <div class="error-message">{{ error }}</div>
-    {% endif %}
-
-  </div>
+    </div>
 </div>
+
+<script>
+    function showStudentLogin() {
+        // This button is already active, just for consistency
+        console.log('Student login selected');
+    }
+</script>
 {% endblock body %}

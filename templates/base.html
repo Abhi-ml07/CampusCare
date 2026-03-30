@@ -26,10 +26,19 @@
             <li><a href="{{ url_for('contact') }}">Contact</a></li>
 
             {% if session.get('user') %}
+                {% if session.get('role') == 'admin' %}
+                    <li>
+                        <a href="{{ url_for('admin_dashboard') }}" class="admin-link" style="color: #f59e0b;">🔐 Admin Dashboard</a>
+                    </li>
+                {% else %}
+                    <li class="welcome">
+                        <a href="{{ url_for('dashboard') }}" class="user-link">
+                            ⚆_⚆ {{ session['user']|e }}
+                        </a>
+                    </li>
+                {% endif %}
                 <li class="welcome">
-                    <a href="{{ url_for('dashboard') }}" class="user-link">
-                        ⚆_⚆ {{ session['user']|e }}
-                    </a>
+                    <span>👤 {{ session['user']|e }}</span>
                 </li>
                 <li>
                     <form method="post" action="{{ url_for('logout') }}">

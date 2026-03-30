@@ -3,72 +3,600 @@
 {% block title %}Dashboard - CampusCare{% endblock title %}
 
 {% block body %}
-<div class="container">
-   <header class="site-header">
-        <h1>Student Dashboard</h1>
-        <form class="d-flex" role="search">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
-            <button class="btn btn-outline-success" type="submit">Search</button>
-        </form>
-    </header>
-    <section class="hero" style="grid-template-columns:280px 1fr;">
-        <aside class="sidebar card">
-            <h3>Filters</h3>
-            <div style="margin-top:12px;display:grid;gap:10px">
+<style>
+    .dashboard-main {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 24px;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 30px;
+    }
+
+    .dashboard-sidebar {
+        position: sticky;
+        top: 100px;
+        height: fit-content;
+    }
+
+    .sidebar-card {
+        background: linear-gradient(135deg, rgba(11, 18, 32, 0.8), rgba(7, 16, 41, 0.95));
+        border: 1px solid rgba(124, 58, 237, 0.3);
+        border-radius: 12px;
+        padding: 20px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .sidebar-card h3 {
+        margin: 0 0 20px 0;
+        font-size: 1.1rem;
+        color: #e6eef8;
+        font-weight: 600;
+    }
+
+    .filter-group {
+        margin-bottom: 25px;
+    }
+
+    .filter-group label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #e6eef8;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .filter-group select {
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: 8px;
+        border: 1px solid rgba(124, 58, 237, 0.5);
+        background: linear-gradient(135deg, rgba(11, 18, 32, 0.9), rgba(7, 16, 41, 0.95));
+        color: #e6eef8;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all var(--transition);
+    }
+
+    .filter-group select option {
+        background: #0b1220;
+        color: #e6eef8;
+        padding: 10px;
+    }
+
+    .filter-group select option:hover {
+        background: rgba(124, 58, 237, 0.3);
+        color: #fff;
+    }
+
+    .filter-group select:focus {
+        outline: none;
+        border-color: var(--accent);
+        background: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(6, 182, 212, 0.1));
+        box-shadow: 0 0 12px rgba(124, 58, 237, 0.3);
+    }
+
+    .clear-filters-btn {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        background: rgba(239, 68, 68, 0.15);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: #fca5a5;
+        cursor: pointer;
+        font-weight: 600;
+        margin-top: 15px;
+        transition: all var(--transition);
+    }
+
+    .clear-filters-btn:hover {
+        background: rgba(239, 68, 68, 0.25);
+    }
+
+    .dashboard-content {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .dashboard-header h1 {
+        margin: 0;
+        font-size: 2rem;
+        background: linear-gradient(90deg, #7c3aed, #06b6d4);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .search-box {
+        display: flex;
+        gap: 10px;
+        flex: 1;
+        min-width: 250px;
+    }
+
+    .search-box input {
+        flex: 1;
+        padding: 12px 14px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.05);
+        color: #e6eef8;
+        font-size: 0.95rem;
+        transition: all var(--transition);
+    }
+
+    .search-box input::placeholder {
+        color: var(--muted);
+    }
+
+    .search-box input:focus {
+        outline: none;
+        border-color: var(--accent);
+        background: rgba(124, 58, 237, 0.1);
+        box-shadow: 0 0 8px rgba(124, 58, 237, 0.2);
+    }
+
+    .search-box button {
+        padding: 12px 24px;
+        border-radius: 8px;
+        background: linear-gradient(90deg, var(--accent), var(--accent-2));
+        border: none;
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all var(--transition);
+    }
+
+    .search-box button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+    }
+
+    .issues-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 20px;
+    }
+
+    .issue-card {
+        background: linear-gradient(135deg, rgba(124, 58, 237, 0.08), rgba(6, 182, 212, 0.03));
+        border: 1px solid rgba(124, 58, 237, 0.15);
+        border-radius: 12px;
+        padding: 20px;
+        backdrop-filter: blur(10px);
+        transition: all var(--transition);
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .issue-card:hover {
+        border-color: rgba(124, 58, 237, 0.3);
+        background: linear-gradient(135deg, rgba(124, 58, 237, 0.12), rgba(6, 182, 212, 0.06));
+        box-shadow: 0 8px 24px rgba(124, 58, 237, 0.15);
+    }
+
+    .issue-card h3 {
+        margin: 0;
+        font-size: 1.1rem;
+        color: #e6eef8;
+        word-break: break-word;
+    }
+
+    .issue-meta {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        font-size: 0.85rem;
+    }
+
+    .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--muted);
+    }
+
+    .category-badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 4px;
+        background: rgba(124, 58, 237, 0.2);
+        color: #a5b4fc;
+        font-size: 0.8rem;
+        font-weight: 600;
+        border: 1px solid rgba(124, 58, 237, 0.3);
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        border: 1px solid;
+    }
+
+    .status-pending {
+        background: rgba(245, 158, 11, 0.15);
+        color: #fbbf24;
+        border-color: rgba(245, 158, 11, 0.3);
+    }
+
+    .status-process {
+        background: rgba(59, 130, 246, 0.15);
+        color: #60a5fa;
+        border-color: rgba(59, 130, 246, 0.3);
+    }
+
+    .status-resolved {
+        background: rgba(16, 185, 129, 0.15);
+        color: #6ee7b7;
+        border-color: rgba(16, 185, 129, 0.3);
+    }
+
+    .issue-description {
+        color: var(--muted);
+        font-size: 0.9rem;
+        line-height: 1.5;
+        flex-grow: 1;
+    }
+
+    .issue-stats {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 15px;
+        border-top: 1px solid rgba(124, 58, 237, 0.1);
+    }
+
+    .like-section {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .like-count {
+        font-weight: 600;
+        color: #e6eef8;
+        font-size: 0.95rem;
+    }
+
+    .like-btn {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 14px;
+        border-radius: 6px;
+        background: rgba(124, 58, 237, 0.15);
+        border: 1px solid rgba(124, 58, 237, 0.3);
+        color: #a5b4fc;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all var(--transition);
+        white-space: nowrap;
+    }
+
+    .like-btn:hover {
+        background: rgba(124, 58, 237, 0.25);
+        border-color: rgba(124, 58, 237, 0.5);
+        transform: scale(1.05);
+    }
+
+    .like-btn:active {
+        transform: scale(0.95);
+    }
+
+    .affected-count {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.9rem;
+        color: var(--muted);
+    }
+
+    .report-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 40px;
+        padding: 20px;
+    }
+
+    .report-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 14px 32px;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #fff;
+        background: linear-gradient(135deg, #ff4b2b, #ff416c);
+        border: none;
+        border-radius: 8px;
+        text-decoration: none;
+        box-shadow: 0 8px 20px rgba(255, 65, 108, 0.4);
+        transition: all var(--transition);
+        cursor: pointer;
+    }
+
+    .report-btn:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 12px 30px rgba(255, 65, 108, 0.5);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 80px 20px;
+        color: var(--muted);
+    }
+
+    .empty-state-icon {
+        font-size: 4rem;
+        margin-bottom: 15px;
+        opacity: 0.5;
+    }
+
+    .empty-state h3 {
+        color: #e6eef8;
+        margin-bottom: 10px;
+    }
+
+    @media (max-width: 768px) {
+        .dashboard-main {
+            grid-template-columns: 1fr;
+            padding: 20px;
+        }
+
+        .dashboard-sidebar {
+            position: relative;
+            top: auto;
+        }
+
+        .dashboard-header {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .dashboard-header h1 {
+            font-size: 1.5rem;
+        }
+
+        .search-box {
+            flex-direction: column;
+        }
+
+        .search-box input,
+        .search-box button {
+            width: 100%;
+        }
+
+        .issues-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="dashboard-main">
+    <!-- Sidebar -->
+    <aside class="dashboard-sidebar">
+        <div class="sidebar-card">
+            <h3>🔍 Filters</h3>
+
+            <div class="filter-group">
                 <label>Category</label>
-                <select class="input">
-                    <option>All</option>
-                    <option>Academic</option>
-                    <option>Technical</option>
-                    <option>Administrative</option>
-                    <option>Canteen</option>
-                </select>
-
-                <label>Status</label>
-                <select class="input">
-                    <option>All</option>
-                    <option>Open</option>
-                    <option>In Progress</option>
-                    <option>Resolved</option>
-                </select>
-
-                <label>Sort</label>
-                <select class="input">
-                    <option>Recent</option>
-                    <option>Most Liked</option>
-                    <option>Most Viewed</option>
+                <select id="categoryFilter">
+                    <option value="">All Categories</option>
+                    <option value="Academic">Academic</option>
+                    <option value="Technical">Technical</option>
+                    <option value="Administrative">Administrative</option>
+                    <option value="Canteen">Canteen</option>
+                    <option value="Infrastructure">Infrastructure</option>
+                    <option value="Other">Other</option>
                 </select>
             </div>
-        </aside>
 
-        <div>
-            <section style="margin-bottom:16px">
-                <h2>List of Issues</h2>
-            </section>
+            <div class="filter-group">
+                <label>Status</label>
+                <select id="statusFilter">
+                    <option value="">All Status</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Process">In Process</option>
+                    <option value="Resolved">Resolved</option>
+                </select>
+            </div>
 
-            <section class="grid">
-                <div class="card">
-                    <h3>WiFi not working in hostel</h3>
-                    <p class="muted">Category: Technical • Status: Open</p>
-                    <p class="help">👍 120 Likes</p>
-                </div>
+            <div class="filter-group">
+                <label>Sort By</label>
+                <select id="sortFilter">
+                    <option value="recent">Recent</option>
+                    <option value="liked">Most Liked</option>
+                    <option value="affected">Most Affected</option>
+                </select>
+            </div>
 
-                <div class="card">
-                    <h3>Library timing extension</h3>
-                    <p class="muted">Category: Administrative • Status: In Progress</p>
-                    <p class="help">👍 95 Likes</p>
-                </div>
+            <button class="clear-filters-btn" onclick="clearFilters()">🔄 Clear Filters</button>
+        </div>
+    </aside>
 
-                <div class="card">
-                    <h3>Assignment deadline issue</h3>
-                    <p class="muted">Category: Academic • Status: Resolved</p>
-                    <p class="help">👍 150 Likes</p>
-                </div>
-            </section>
-            <div class="report-container">
-                <a href="{{ url_for('response') }}" target="_blank" class="report-btn">Report Issue</a>
+    <!-- Main Content -->
+    <div class="dashboard-content">
+        <!-- Header -->
+        <div class="dashboard-header">
+            <h1>📊 Student Dashboard</h1>
+            <div class="search-box">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    placeholder="🔍 Search issues by title, category, or location..."
+                    onkeyup="filterIssues()"
+                />
+                <button onclick="filterIssues()">Search</button>
             </div>
         </div>
-    </section>
+
+        <!-- Issues Grid -->
+        <div class="issues-grid" id="issuesGrid">
+            {% if issues %}
+                {% for issue in issues %}
+                <div class="issue-card" data-category="{{ issue.category }}" data-status="{{ issue.status }}" data-likes="{{ issue.get('likes', 0) }}" data-title="{{ issue.get('description', '') }}">
+                    <!-- Title -->
+                    <h3>{{ issue.get('description', 'Issue')[:50] }}{% if issue.get('description', '')|length > 50 %}...{% endif %}</h3>
+
+                    <!-- Meta Information -->
+                    <div class="issue-meta">
+                        <span class="category-badge">{{ issue.category }}</span>
+                        <span class="status-badge status-{{ issue.status.lower() }}">{{ issue.status }}</span>
+                        <span class="meta-item">📍 {{ issue.location }}</span>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="issue-description">
+                        <strong>Subcategory:</strong> {{ issue.subcategory }}<br>
+                        <strong>Duration:</strong> {{ issue.duration }}<br>
+                        <strong>Severity:</strong> 
+                        {% if issue.severity >= 8 %}
+                            ⭐⭐⭐ Critical
+                        {% elif issue.severity >= 5 %}
+                            ⭐⭐ High
+                        {% else %}
+                            ⭐ Normal
+                        {% endif %}
+                    </div>
+
+                    <!-- Stats and Actions -->
+                    <div class="issue-stats">
+                        <div class="affected-count">
+                            👥 {{ issue.students_affected }} affected
+                        </div>
+                        <div class="like-section">
+                            <span class="like-count">{{ issue.get('likes', 0) }} 👍</span>
+                            <form method="POST" action="{{ url_for('like_issue', issue_id=issue._id) }}" style="margin: 0;">
+                                <button type="submit" class="like-btn">👍 Like</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state" style="grid-column: 1 / -1;">
+                    <div class="empty-state-icon">📭</div>
+                    <h3>No Issues Found</h3>
+                    <p>Be the first to report an issue or check back later!</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Report Button -->
+        <div class="report-container">
+            <a href="{{ url_for('response') }}" class="report-btn">
+                <span>✏️</span>
+                <span>Report New Issue</span>
+            </a>
+        </div>
+    </div>
 </div>
+
+<script>
+    // Get all filter elements
+    const categoryFilter = document.getElementById('categoryFilter');
+    const statusFilter = document.getElementById('statusFilter');
+    const sortFilter = document.getElementById('sortFilter');
+    const searchInput = document.getElementById('searchInput');
+    const issuesGrid = document.getElementById('issuesGrid');
+
+    // Filter function
+    function filterIssues() {
+        const categoryValue = categoryFilter.value.toLowerCase();
+        const statusValue = statusFilter.value.toLowerCase();
+        const sortValue = sortFilter.value;
+        const searchTerm = searchInput.value.toLowerCase();
+
+        let cards = Array.from(issuesGrid.querySelectorAll('.issue-card'));
+
+        // Filter by category
+        if (categoryValue) {
+            cards = cards.filter(card => card.dataset.category.toLowerCase() === categoryValue);
+        }
+
+        // Filter by status
+        if (statusValue) {
+            cards = cards.filter(card => card.dataset.status.toLowerCase() === statusValue);
+        }
+
+        // Filter by search term
+        if (searchTerm) {
+            cards = cards.filter(card => {
+                const text = card.textContent.toLowerCase();
+                return text.includes(searchTerm);
+            });
+        }
+
+        // Sort
+        if (sortValue === 'liked') {
+            cards.sort((a, b) => parseInt(b.dataset.likes) - parseInt(a.dataset.likes));
+        } else if (sortValue === 'affected') {
+            cards.sort((a, b) => {
+                const aAffected = parseInt(a.querySelector('.affected-count').textContent) || 0;
+                const bAffected = parseInt(b.querySelector('.affected-count').textContent) || 0;
+                return bAffected - aAffected;
+            });
+        }
+
+        // Show/hide cards
+        issuesGrid.querySelectorAll('.issue-card').forEach(card => {
+            card.style.display = 'none';
+        });
+
+        cards.forEach(card => {
+            card.style.display = 'grid';
+        });
+
+        // Show empty state if no results
+        const visibleCards = cards.length;
+        if (visibleCards === 0) {
+            if (!issuesGrid.querySelector('.empty-state')) {
+                const emptyState = document.createElement('div');
+                emptyState.className = 'empty-state';
+                emptyState.style.gridColumn = '1 / -1';
+                emptyState.innerHTML = `
+                    <div class="empty-state-icon">🔍</div>
+                    <h3>No Issues Match</h3>
+                    <p>Try adjusting your filters or search terms</p>
+                `;
+                issuesGrid.appendChild(emptyState);
+            }
+        } else {
+            const emptyState = issuesGrid.querySelector('.empty-state');
+            if (emptyState) emptyState.remove();
+        }
+    }
+
+    // Clear filters
+    function clearFilters() {
+        categoryFilter.value = '';
+        statusFilter.value = '';
+        sortFilter.value = 'recent';
+        searchInput.value = '';
+        filterIssues();
+    }
+
+    // Add event listeners
+    categoryFilter.addEventListener('change', filterIssues);
+    statusFilter.addEventListener('change', filterIssues);
+    sortFilter.addEventListener('change', filterIssues);
+</script>
 {% endblock body %}

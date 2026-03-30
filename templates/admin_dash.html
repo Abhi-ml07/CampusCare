@@ -3,75 +3,467 @@
 {% block title %}Admin Dashboard - CampusCare{% endblock title %}
 
 {% block body %}
-<div class="container">
-    <div class="card login-card" style="max-width: 1100px;">
-        <h2 class="center">Admin Dashboard</h2>
-        <p style="text-align:center; color:#666; margin-bottom:20px;">
-            View all reported issues and update their status
-        </p>
+<style>
+    .admin-container {
+        padding: 30px;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
 
-        {% if success %}
-            <div class="success-message">{{ success }}</div>
-        {% endif %}
+    .admin-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
 
-        {% if error %}
-            <div class="error-message">{{ error }}</div>
-        {% endif %}
+    .admin-header h1 {
+        margin: 0;
+        font-size: 2.2rem;
+        background: linear-gradient(90deg, #7c3aed, #06b6d4);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
 
-        {% if issues %}
-            <div style="overflow-x:auto;">
-                <table style="width:100%; border-collapse:collapse; margin-top:20px;">
-                    <thead>
-                        <tr style="background:#f5f5f5;">
-                            <th style="padding:12px; border:1px solid #ddd;">Category</th>
-                            <th style="padding:12px; border:1px solid #ddd;">Subcategory</th>
-                            <th style="padding:12px; border:1px solid #ddd;">Location</th>
-                            <th style="padding:12px; border:1px solid #ddd;">Description</th>
-                            <th style="padding:12px; border:1px solid #ddd;">Students Affected</th>
-                            <th style="padding:12px; border:1px solid #ddd;">Severity</th>
-                            <th style="padding:12px; border:1px solid #ddd;">Current Status</th>
-                            <th style="padding:12px; border:1px solid #ddd;">Update Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for issue in issues %}
-                        <tr>
-                            <td style="padding:12px; border:1px solid #ddd;">{{ issue.category }}</td>
-                            <td style="padding:12px; border:1px solid #ddd;">{{ issue.subcategory }}</td>
-                            <td style="padding:12px; border:1px solid #ddd;">{{ issue.location }}</td>
-                            <td style="padding:12px; border:1px solid #ddd;">{{ issue.description }}</td>
-                            <td style="padding:12px; border:1px solid #ddd;">{{ issue.students_affected }}</td>
-                            <td style="padding:12px; border:1px solid #ddd;">{{ issue.severity }}</td>
-                            <td style="padding:12px; border:1px solid #ddd; font-weight:bold;">
-                                {% if issue.status == "Pending" %}
-                                    <span style="color:orange;">{{ issue.status }}</span>
-                                {% elif issue.status == "Process" %}
-                                    <span style="color:blue;">{{ issue.status }}</span>
-                                {% elif issue.status == "Resolved" %}
-                                    <span style="color:green;">{{ issue.status }}</span>
-                                {% else %}
-                                    <span>{{ issue.status }}</span>
-                                {% endif %}
-                            </td>
-                            <td style="padding:12px; border:1px solid #ddd;">
-                                <form method="POST" action="{{ url_for('update_issue_status', issue_id=issue._id) }}" style="display:flex; gap:8px; align-items:center;">
-                                    <select name="status" class="input" required style="min-width:130px;">
-                                        <option value="">Select</option>
-                                        <option value="Pending" {% if issue.status == "Pending" %}selected{% endif %}>Pending</option>
-                                        <option value="Process" {% if issue.status == "Process" %}selected{% endif %}>Process</option>
-                                        <option value="Resolved" {% if issue.status == "Resolved" %}selected{% endif %}>Resolved</option>
-                                    </select>
-                                    <button type="submit" class="btn-sign">Update</button>
-                                </form>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        {% else %}
-            <p style="text-align:center; margin-top:20px;">No issues found.</p>
-        {% endif %}
+    .admin-header p {
+        color: var(--muted);
+        margin: 0;
+        font-size: 0.95rem;
+    }
+
+    .logout-btn {
+        padding: 10px 20px;
+        border-radius: 8px;
+        background: linear-gradient(90deg, #ef4444, #dc2626);
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all var(--transition);
+    }
+
+    .logout-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .stat-card {
+        background: linear-gradient(135deg, rgba(124, 58, 237, 0.1), rgba(6, 182, 212, 0.05));
+        border: 1px solid rgba(124, 58, 237, 0.2);
+        border-radius: 12px;
+        padding: 20px;
+        backdrop-filter: blur(10px);
+    }
+
+    .stat-card h3 {
+        margin: 0 0 10px 0;
+        color: var(--muted);
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .stat-card .value {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+
+    .stat-card.pending .value { color: #f59e0b; }
+    .stat-card.process .value { color: #3b82f6; }
+    .stat-card.resolved .value { color: #10b981; }
+
+    .filter-section {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .filter-section select,
+    .filter-section input {
+        padding: 10px 12px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.05);
+        color: #e6eef8;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all var(--transition);
+    }
+
+    .filter-section select:focus,
+    .filter-section input:focus {
+        outline: none;
+        border-color: var(--accent);
+        background: rgba(124, 58, 237, 0.1);
+        box-shadow: 0 0 8px rgba(124, 58, 237, 0.2);
+    }
+
+    .issues-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: linear-gradient(135deg, rgba(124, 58, 237, 0.05), rgba(6, 182, 212, 0.02));
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid rgba(124, 58, 237, 0.15);
+    }
+
+    .issues-table thead {
+        background: linear-gradient(90deg, rgba(124, 58, 237, 0.15), rgba(6, 182, 212, 0.1));
+        border-bottom: 2px solid rgba(124, 58, 237, 0.2);
+    }
+
+    .issues-table th {
+        padding: 16px 12px;
+        text-align: left;
+        font-weight: 600;
+        color: #e6eef8;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .issues-table td {
+        padding: 14px 12px;
+        border-bottom: 1px solid rgba(124, 58, 237, 0.1);
+        font-size: 0.95rem;
+    }
+
+    .issues-table tbody tr:hover {
+        background: rgba(124, 58, 237, 0.08);
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
+
+    .status-pending {
+        background: rgba(245, 158, 11, 0.2);
+        color: #fbbf24;
+        border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .status-process {
+        background: rgba(59, 130, 246, 0.2);
+        color: #60a5fa;
+        border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .status-resolved {
+        background: rgba(16, 185, 129, 0.2);
+        color: #6ee7b7;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .severity-high {
+        color: #ef4444;
+    }
+
+    .severity-medium {
+        color: #f59e0b;
+    }
+
+    .severity-low {
+        color: #10b981;
+    }
+
+    .update-form {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+
+    .update-form select {
+        padding: 8px 10px;
+        border-radius: 6px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.05);
+        color: #e6eef8;
+        min-width: 120px;
+        cursor: pointer;
+    }
+
+    .update-form button {
+        padding: 8px 16px;
+        border-radius: 6px;
+        background: linear-gradient(90deg, var(--accent), var(--accent-2));
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.85rem;
+        transition: all var(--transition);
+        white-space: nowrap;
+    }
+
+    .update-form button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--muted);
+    }
+
+    .empty-state-icon {
+        font-size: 3rem;
+        margin-bottom: 15px;
+        opacity: 0.5;
+    }
+
+    .success-message,
+    .error-message {
+        padding: 14px 16px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-weight: 500;
+    }
+
+    .success-message {
+        background: rgba(16, 185, 129, 0.15);
+        color: #6ee7b7;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .error-message {
+        background: rgba(239, 68, 68, 0.15);
+        color: #fca5a5;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    @media (max-width: 768px) {
+        .admin-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .admin-header h1 {
+            font-size: 1.8rem;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .filter-section {
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .filter-section select,
+        .filter-section input {
+            width: 100%;
+        }
+
+        .issues-table {
+            font-size: 0.85rem;
+        }
+
+        .issues-table th,
+        .issues-table td {
+            padding: 10px 8px;
+        }
+
+        .update-form {
+            flex-direction: column;
+        }
+
+        .update-form select {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="admin-container">
+    <!-- Header -->
+    <div class="admin-header">
+        <div>
+            <h1>🎓 Admin Dashboard</h1>
+            <p>Manage all campus issues and track their status</p>
+        </div>
+        <form method="post" action="{{ url_for('logout') }}" style="margin: 0;">
+            <button type="submit" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </form>
     </div>
+
+    <!-- Messages -->
+    {% if success %}
+        <div class="success-message"><i class="fas fa-check-circle"></i> {{ success }}</div>
+    {% endif %}
+
+    {% if error %}
+        <div class="error-message"><i class="fas fa-exclamation-circle"></i> {{ error }}</div>
+    {% endif %}
+
+    <!-- Statistics -->
+    {% if issues %}
+        <div class="stats-grid">
+            <div class="stat-card pending">
+                <h3>📋 Pending Issues</h3>
+                <div class="value">{{ issues|selectattr('status', 'equalto', 'Pending')|list|length }}</div>
+                <p style="margin: 0; color: var(--muted); font-size: 0.85rem;">Awaiting action</p>
+            </div>
+            <div class="stat-card process">
+                <h3>⚙️ In Process</h3>
+                <div class="value">{{ issues|selectattr('status', 'equalto', 'Process')|list|length }}</div>
+                <p style="margin: 0; color: var(--muted); font-size: 0.85rem;">Currently being handled</p>
+            </div>
+            <div class="stat-card resolved">
+                <h3>✅ Resolved</h3>
+                <div class="value">{{ issues|selectattr('status', 'equalto', 'Resolved')|list|length }}</div>
+                <p style="margin: 0; color: var(--muted); font-size: 0.85rem;">Completed issues</p>
+            </div>
+            <div class="stat-card" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05)); border-color: rgba(239, 68, 68, 0.2);">
+                <h3>🚨 Total Issues</h3>
+                <div class="value" style="color: #fca5a5;">{{ issues|length }}</div>
+                <p style="margin: 0; color: var(--muted); font-size: 0.85rem;">All reported issues</p>
+            </div>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <input type="text" id="searchInput" placeholder="🔍 Search by category, location, description..." style="flex: 1; min-width: 200px;">
+            <select id="statusFilter">
+                <option value="">All Status</option>
+                <option value="Pending">Pending</option>
+                <option value="Process">In Process</option>
+                <option value="Resolved">Resolved</option>
+            </select>
+            <select id="categoryFilter">
+                <option value="">All Categories</option>
+                {% for issue in issues %}
+                    {% if issue.category not in [i.category for i in issues[:loop.index0]] %}
+                        <option value="{{ issue.category }}">{{ issue.category }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Issues Table -->
+        <div style="overflow-x: auto;">
+            <table class="issues-table">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Subcategory</th>
+                        <th>Location</th>
+                        <th>Description</th>
+                        <th>Affected</th>
+                        <th>Severity</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="issuesTableBody">
+                    {% for issue in issues %}
+                    <tr class="issue-row" data-status="{{ issue.status }}" data-category="{{ issue.category }}">
+                        <td><strong>{{ issue.category }}</strong></td>
+                        <td>{{ issue.subcategory }}</td>
+                        <td>📍 {{ issue.location }}</td>
+                        <td title="{{ issue.description }}">{{ issue.description[:40] }}{% if issue.description|length > 40 %}...{% endif %}</td>
+                        <td>{{ issue.students_affected }}</td>
+                        <td>
+                            {% if issue.severity >= 8 %}
+                                <span class="severity-high">⭐⭐⭐ Critical</span>
+                            {% elif issue.severity >= 5 %}
+                                <span class="severity-medium">⭐⭐ High</span>
+                            {% else %}
+                                <span class="severity-low">⭐ Normal</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="status-badge status-{{ issue.status.lower() }}">
+                                {{ issue.status }}
+                            </span>
+                        </td>
+                        <td>
+                            <form method="POST" action="{{ url_for('update_issue_status', issue_id=issue._id) }}" class="update-form">
+                                <select name="status" required>
+                                    <option value="">Select</option>
+                                    <option value="Pending" {% if issue.status == "Pending" %}selected{% endif %}>Pending</option>
+                                    <option value="Process" {% if issue.status == "Process" %}selected{% endif %}>In Process</option>
+                                    <option value="Resolved" {% if issue.status == "Resolved" %}selected{% endif %}>Resolved</option>
+                                </select>
+                                <button type="submit">Update</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <div class="empty-state-icon">📭</div>
+            <h3>No Issues Found</h3>
+            <p>There are currently no issues reported. Check back later!</p>
+        </div>
+    {% endif %}
 </div>
+
+<script>
+    // Search and Filter Functionality
+    const searchInput = document.getElementById('searchInput');
+    const statusFilter = document.getElementById('statusFilter');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const tableBody = document.getElementById('issuesTableBody');
+
+    function filterTable() {
+        if (!tableBody) return;
+
+        const searchTerm = searchInput.value.toLowerCase();
+        const statusValue = statusFilter.value;
+        const categoryValue = categoryFilter.value;
+
+        const rows = tableBody.querySelectorAll('.issue-row');
+
+        rows.forEach(row => {
+            let show = true;
+
+            // Status filter
+            if (statusValue && row.dataset.status !== statusValue) {
+                show = false;
+            }
+
+            // Category filter
+            if (categoryValue && row.dataset.category !== categoryValue) {
+                show = false;
+            }
+
+            // Search filter
+            if (searchTerm) {
+                const text = row.textContent.toLowerCase();
+                if (!text.includes(searchTerm)) {
+                    show = false;
+                }
+            }
+
+            row.style.display = show ? '' : 'none';
+        });
+    }
+
+    if (searchInput) searchInput.addEventListener('input', filterTable);
+    if (statusFilter) statusFilter.addEventListener('change', filterTable);
+    if (categoryFilter) categoryFilter.addEventListener('change', filterTable);
+</script>
 {% endblock body %}

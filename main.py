@@ -32,7 +32,8 @@ def about():
 def dashboard():
     if 'user' not in session:
         return redirect(url_for('login'))
-    return render_template("dash.html")
+    issues = list(mongo.db.issues.find().sort("created_at", -1))
+    return render_template("dash.html", issues=issues)
 
 
 @app.route("/update_issue_status/<issue_id>", methods=["POST"])
@@ -150,10 +151,15 @@ def adminregister():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        email = request.form.get("email")
-        password = request.form.get("password").encode('utf-8')
+        email = request.form.get("email", "").strip().lower()
+        password = request.form.get("password", "").encode('utf-8')
 
-        user = mongo.db.users.find_one({"email": email})
+        if not email or not password or password == b'':
+            return render_template("login.html", error="Email and password are required")
+
+        # Find user by email (case-insensitive)
+        user = mongo.db.users.find_one({"email": {"$regex": f"^{email}$", "$options": "i"}})
+        
         if user and bcrypt.checkpw(password, user["password"]):
             session["user"] = user["name"]
             session["email"] = user["email"]
@@ -167,7 +173,7 @@ def login():
 @app.route("/admin")
 def admin_dashboard():
     if 'user' not in session or session.get("role") != "admin":
-        return redirect(url_for("login"))
+        return redirect(url_for("admin_login"))
     issues = list(mongo.db.issues.find().sort("created_at", -1))
     return render_template("admin_dash.html", issues=issues)
 
@@ -175,17 +181,22 @@ def admin_dashboard():
 @app.route("/admin_login", methods=["GET", "POST"])
 def admin_login():
     if request.method == "POST":
-        email = request.form.get("Email")
-        password = request.form.get("password").encode('utf-8')
+        email = request.form.get("Email", "").strip().lower()
+        password = request.form.get("password", "").encode('utf-8')
 
-        user = mongo.db.users.find_one({"email": email})
+        if not email or not password or password == b'':
+            return render_template("adminlogin.html", error="Email and password are required")
+
+        # Find admin user by email (case-insensitive)
+        user = mongo.db.users.find_one({"email": {"$regex": f"^{email}$", "$options": "i"}})
+        
         if user and bcrypt.checkpw(password, user["password"]) and user.get("role") == "admin":
             session["user"] = user["name"]
             session["email"] = user["email"]
-            session["role"] = user.get("role", "user")
+            session["role"] = "admin"
             return redirect(url_for("admin_dashboard"))
         else:
-            return render_template("adminlogin.html", error="Invalid email or password")
+            return render_template("adminlogin.html", error="Invalid email or password, or you don't have admin privileges")
     return render_template("adminlogin.html")
 
 
@@ -197,6 +208,7 @@ def like_issue(issue_id):
             {"_id": ObjectId(issue_id)},
             {"$inc": {"likes": 1}}
         )
+        return redirect(url_for("dashboard"))
 
 @app.route("/logout", methods=["POST"])
 def logout():
