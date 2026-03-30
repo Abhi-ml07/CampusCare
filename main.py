@@ -8,9 +8,9 @@ import os,bcrypt
 load_dotenv()
 
 app = Flask(__name__)
-# app.config["MONGO_URI"] = os.getenv("MONGO_URI")
-# app.secret_key = os.getenv("SECRET_KEY", "dev-secret")
-# mongo = PyMongo(app)
+app.config["MONGO_URI"] = os.getenv("MONGO_URI")
+app.secret_key = os.getenv("SECRET_KEY", "dev-secret")
+mongo = PyMongo(app)
 
 # -------------
 
