@@ -70,18 +70,4 @@
     </form>
   </div>
 </div>
-<script>
-  function toggleStudentCode() {
-    let role = document.getElementById("category").value;
-    let div = document.getElementById("studentCodeDiv");
-
-    if (role === "Student") {
-        div.style.display = "block";
-    } else {
-        div.style.display = "none";
-    }
-}
-  // Initially hide student code field
-  toggleStudentCode();
-</script>
 {% endblock body %}
