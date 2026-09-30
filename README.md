@@ -86,3 +86,6 @@ CampusCare/
 ```bash
 git clone https://github.com/Abhi-ml07/CampusCare.git
 cd CampusCare
+
+## Live Link on Render
+https://campuscare-in.onrender.com/
